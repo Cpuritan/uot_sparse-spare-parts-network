@@ -1,32 +1,32 @@
-# 实验二：固定网络政策的样本外成本与计算时间
+# Experiment 2: Out-of-Sample Cost and Computing Time for Fixed Network Policies
 
-## 当前论文展示：统一 SAA
+## Current paper presentation: unified SAA
 
-论文中的 SAA 指原始记录中的 SAA-C，即二元开仓、连续规划库存。当前两张主图展示 SD-TV-UOT、MVP-C、MVP-I 和 SAA；SAA 的成本、耗时和 gap 均只读取原 SAA-C。论文加速比为 11.5--50.7 倍。原始五方法记录、完整统计与场景文件继续保留供核验，以下五方法运行说明描述原始实验。
+In the paper, SAA refers to SAA-C in the raw records: binary warehouse opening with continuous planning inventory. The two main figures currently show SD-TV-UOT, MVP-C, MVP-I, and SAA; the cost, time, and gap for SAA are read only from the original SAA-C record. The reported paper speedup is 11.5–50.7×. The original five-method records, complete statistics, and scenario files remain available for verification; the five-method execution description below documents the raw experiment.
 
-仅重新绘图运行 `python plot_exp2.py`；不调用规划或 OOS 求解。`figure-exp2-1-paper-data.csv` 保存主图的 12,000 条场景观测，`figure-exp2-2-paper-data.csv` 保存 12 行完整统计；两表使用论文名称 SAA。原 `table-exp2-summary.csv` 和两份 `figure-exp2-*-data.csv` 仍为完整原始来源。PNG、PDF、SVG 按原图名覆盖；论文引用 `正在修改中/Figures/figure-exp2-1.pdf` 和 `figure-exp2-2.pdf`，分别对应 Figure 6 和 Figure 7。
+To regenerate figures only, run `python plot_exp2.py`; this does not call planning or out-of-sample optimization. `figure-exp2-1-paper-data.csv` contains the 12,000 observations used by the main cost figure, and `figure-exp2-2-paper-data.csv` contains the 12-row complete statistics table; both use the paper label SAA. The original `table-exp2-summary.csv` and the two `figure-exp2-*-data.csv` files remain the complete raw sources. PNG, PDF, and SVG files are overwritten using the original figure names; the manuscript cites the corresponding files in its `Figures/` directory as Figures 6 and 7, respectively.
 
-本目录是可独立运行的轻量论文实验，不导入 `exp1` 或旧项目的运行模块，不读取旧政策、求解耗时或场景成本。2026-10-18 的本轮设置优先于旧实验二：SAA 每种方法仅训练一次，每次 200 个联合场景；连续核带宽为 5 km；MVP/SAA 使用 Gurobi；费用单位为欧元。方法依据是 `input/manuscript.tex` 的正文方法与 Algorithm 1，正文中尚未更新的旧实验段落不作为本轮实验设计。
+This directory is a self-contained, lightweight paper experiment. It does not import `exp1` or legacy-project modules, and it does not read old policies, solver times, or scenario costs. The settings from the 2026-10-18 revision take precedence over the older Experiment 2: each SAA method is trained once on 200 joint scenarios; the continuous-kernel bandwidth is 5 km; MVP/SAA use Gurobi; and costs are reported in euros. The implementation follows the method and Algorithm 1 in `input/manuscript.tex`; older experiment paragraphs in the manuscript are not used as the design specification for this run.
 
-## 1. 扁平结构与运行
+## 1. Flat layout and execution
 
 ```text
 exp2/
-  environment.py   固定实例、费用、独立训练/测试随机流
-  geometry.py      连续核边界裁剪、共同仿射细分、Green 精确区域积分
-  algorithm.py     正文 Algorithm 1 的共享重加权与最终恢复
-  benchmark.py     Gurobi 求解 MVP-C/I、SAA-C/I
-  evaluation.py    统一整数执行与逐场景费用/风险指标
-  experiment2.py   唯一运行入口、逐政策检查点和统计汇总
-  plot_exp2.py      两张论文图，只读取已保存结果
-  test_exp2.py      独立积分、正文更新、Gurobi 与运输 LP 核验
-  validate_exp2.py  完整结果的独立事后审计
-  requirements.txt 精确依赖版本
-  input/           seed=42 冻结输入、训练/测试场景和论文快照
-  output/          原始解、场景成本、表格、图、日志与审计
+  environment.py   Fixed instances, costs, and independent train/test streams
+  geometry.py      Kernel boundary clipping, common affine subdivision, and exact Green integration
+  algorithm.py     Shared reweighting and final recovery from Algorithm 1
+  benchmark.py     Gurobi models for MVP-C/I and SAA-C/I
+  evaluation.py    Unified integer execution and scenario-level cost/risk metrics
+  experiment2.py   Single entry point, per-policy checkpoints, and summary statistics
+  plot_exp2.py     Two paper figures that read only saved results
+  test_exp2.py     Independent integration, manuscript, Gurobi, and transport-LP checks
+  validate_exp2.py Independent post-run audit of complete results
+  requirements.txt Exact dependency versions
+  input/           Frozen seed-42 inputs, train/test scenarios, and manuscript snapshot
+  output/          Generated solutions, scenario costs, tables, figures, logs, and audits
 ```
 
-在本目录执行：
+Run from this directory:
 
 ```powershell
 python -m unittest -v test_exp2
@@ -35,96 +35,96 @@ python validate_exp2.py
 python experiment2.py --report-only
 ```
 
-本机使用 `D:/Anaconda3/python.exe`。Gurobi 需要有效许可证。正常入口串行运行；中断后再次运行会复用本目录已完成且源码/输入签名一致的政策，不重复求解。每次规划结束立即保存原始可行解、下界、实际 gap 和耗时，再执行样本外评价。未完成的求解无法导出内存解时不伪造结果。若修改科学设置或核心源码，应先保留现有输出，再开始独立新批次；程序拒绝混用签名不同的记录。`--report-only` 不求解，不重新评价。
+The reference environment uses `D:/Anaconda3/python.exe`. Gurobi requires a valid license. The normal entry point runs serially; after interruption it reuses completed policies whose source and input signatures match, without resolving them. Each planning call immediately saves its incumbent, bound, actual gap, and timing before out-of-sample evaluation. If an unfinished solve cannot export an incumbent, no result is fabricated. If scientific settings or core source code change, preserve the current output and start a separate batch; the program rejects mixed signatures. `--report-only` does not solve or reevaluate scenarios.
 
-## 2. 本轮实验设置
+## 2. Experimental settings
 
-| 项目 | 设置 |
+| Item | Setting |
 |---|---|
-| 实例 | 仅 S/M/L 各一个固定 seed=42 实例 |
-| 区域边长 | 30 / 45 / 60 km |
-| 设备数 | 100 / 250 / 500 |
-| 候选仓库数 | 16 / 24 / 32 |
-| 空间输入 | 原 v2-r3 冻结主实例；六热点和背景；位置、概率、费用不变 |
-| Part 1 / Part 2 | 独立概率列 U(0.15,0.35) / U(0.05,0.25)，不复制需求或库存 |
-| SD-TV-UOT | 解析积分、正文菱形三次乘积核、带宽 5 km、epsilon=1 |
-| 停止条件 | Frobenius 相对库存变化不大于 1e-6；最多 200 轮 |
-| MVP-C/I | 每种方法每实例各求解一次，输入为设备点期望需求 |
-| SAA-C/I | 每种方法每实例各求解一次，200 个联合训练场景，repeat=0 |
-| OOS | 每实例共同的 1,000 个联合 Bernoulli 测试场景 |
-| 求解器 | Gurobi 13.0.1，单线程，每次 1,800 秒，实际总成本相对 gap 目标 0.001 |
-| 规模 | 每实例五个政策，共 15 个；不运行其他 seed 或灵敏度实验 |
-| 货币 | 欧元，图中用 €；沿用费用数值，不作汇率换算 |
+| Instances | One fixed seed=42 instance for each of S/M/L |
+| Region side length | 30 / 45 / 60 km |
+| Devices | 100 / 250 / 500 |
+| Candidate warehouses | 16 / 24 / 32 |
+| Spatial input | Frozen v2-r3 master instances; six hotspots plus background; locations, probabilities, and costs unchanged |
+| Part 1 / Part 2 | Independent probability columns U(0.15, 0.35) / U(0.05, 0.25); demand and inventory are not copied |
+| SD-TV-UOT | Exact integration, manuscript diamond cubic-product kernel, bandwidth 5 km, epsilon=1 |
+| Stopping rule | Frobenius relative inventory change at most 1e-6; at most 200 iterations |
+| MVP-C/I | One solve per method and instance using expected device-point demand |
+| SAA-C/I | One solve per method and instance using 200 joint training scenarios, repeat=0 |
+| OOS | Common 1,000 joint Bernoulli test scenarios per instance |
+| Solver | Gurobi 13.0.1, one thread, 1,800-second limit, target relative gap 0.001 for the full cost |
+| Scope | Five policies per instance, 15 policies total; no other seeds or sensitivity experiments |
+| Currency | Euro; figures use € and the original numerical cost scale without conversion |
 
-各规模同 seed 的对象来自嵌套主实例，跨规模不是独立随机网络。训练和测试分别采用随机流 8、9，子流熵为 `[20261017,42,stream,0,part]`。同一规模 SAA-C/I 共用同一组训练场景；所有五个政策共用同一组独立测试场景。一个联合场景包括全部设备、两类备件，并非两类平分场景数。测试地点固定，测试时不从 KDE 重新抽取位置。
+The objects at a given scale and seed come from the nested master instance, so scales are not independent random networks. Training and test streams use streams 8 and 9, with entropy `[20261017,42,stream,0,part]`. SAA-C and SAA-I at the same scale share one training set; all five policies share one independent test set. A joint scenario contains all devices and both parts; the scenario count is not split between parts. Test locations are fixed and are not resampled from the KDE.
 
-费用：共享开仓费为每仓库每期 €120—€180 的随机整数；本地费用为 `b_i + beta_i*d + gamma_i*max(d-10,0)`，系数为 `[40,0.9,0.9]` 分别乘独立 U(0.9,1.1)；外供费为 `68 + 0.9*d0 + 0.9*max(d0-10,0)`，`d0` 为到区域中心的曼哈顿距离；剩余费 €16/件/期。共享开仓费只计一次，两类库存不能互相替代，没有额外安全库存或共享容量约束。
+Costs are as follows: shared opening cost is an integer in €120–€180 per warehouse and period; local cost is `b_i + beta_i*d + gamma_i*max(d-10,0)`, where `[40, 0.9, 0.9]` is multiplied by independent U(0.9, 1.1) coefficients; external supply cost is `68 + 0.9*d0 + 0.9*max(d0-10,0)`, where `d0` is Manhattan distance to the region center; leftover cost is €16 per unit and period. The shared opening cost is counted once, the two inventory parts cannot substitute for each other, and there is no additional safety stock or shared-capacity constraint.
 
-## 3. 5 km 带宽的边界处理
+## 3. Boundary treatment for the 5 km bandwidth
 
-原设备点保持不变，所以部分 5 km 核会跨出原正方形区域。正文连续需求小节明确：若 Omega 不包含全部核支撑，需求测度只保留落在 Omega 内的核质量。本实验严格采用这一规则：
+The original device points remain fixed, so part of a 5 km kernel can cross the original square boundary. The continuous-demand section of the manuscript specifies retaining only kernel mass inside Omega when the full support is not contained in Omega. This experiment follows that rule exactly:
 
-- 将每个原始归一化核的支撑与 `[0,L]²` 精确相交；不扩大区域、不移动点、不重新采样，也不进行边界归一化。
-- Green 积分在裁剪后的多边形上进行，概率权重和核系数保持原值。
-- Algorithm 1 的初值为 `mu_p(Omega)/M`，不是在裁剪发生后仍用完整点需求 `sum_n p_n^p/M`。
-- 每轮核验“仓库区域质量 + 外供质量 = mu_p(Omega)”；不强制等于完整设备点需求。
-- 原离散 MVP/SAA 与测试仍覆盖全部设备点的 Bernoulli 需求。表 `table-exp2-boundary-mass.csv` 显式报告两种需求总量及质量损失，避免把边界效应隐藏为算法优势或劣势。
+- Intersect each original normalized kernel support with `[0,L]²` exactly; do not expand the region, move points, resample, or renormalize at the boundary.
+- Apply Green integration on the clipped polygons while retaining the original probability weights and kernel coefficients.
+- Initialize Algorithm 1 with `mu_p(Omega)/M`, rather than the full point demand `sum_n p_n^p/M` after clipping.
+- Check at every iteration that warehouse-region mass plus external mass equals `mu_p(Omega)`; do not force it to equal complete device-point demand.
+- The discrete MVP/SAA models and OOS evaluation still cover all device points. `table-exp2-boundary-mass.csv` reports both demand totals and lost mass explicitly, so the boundary effect is not hidden as a method advantage or disadvantage.
 
-因此，改变带宽不仅影响平滑范围，还可能改变区域内的连续需求总量。这是当前有限区域、正文原始密度设定的结果，解释 OOS 差异时须同时查看边界质量表。若以后希望核在有限区域内仍严格保总量，需要另行规定边界修正模型，不能悄悄更改本轮密度。
+Thus, changing the bandwidth can change both the smoothing range and the continuous demand mass inside the finite region. This follows from the original finite-domain density specification. Boundary mass must be considered when interpreting OOS differences. A model that strictly preserves total mass inside a finite region would be a separate boundary-correction specification and must not be introduced silently.
 
-## 4. 正文方法对应与统一执行
+## 4. Manuscript correspondence and unified execution
 
-| 正文 | 实现 |
+| Manuscript object | Implementation |
 |---|---|
-| `eq:demand-kernel` | 菱形核的归一化三次乘积密度；裁剪遵循连续需求小节 |
-| `eq:design_weights` | 每轮由前一完整库存矩阵计算共同权重 `F_i/(sum_p m_i^p+epsilon)` |
-| `eq:design_partition`、`eq:design_update` | 所有候选仓库参与；按 `c_i+omega_i` 与外供费用比较，外供优先、再按仓库编号打破并列；同时积分两类需求 |
-| `eq:design_stopping` | 完整库存矩阵 Frobenius 变化除以 `max(1, preceding_norm)` |
-| `eq:design_recovery` | 只允许终止正库存集合，取消惩罚重新积分；不再次搜索仓库子集 |
-| `eq:design_objective` | 最终原始经济成本计一次共享开仓费，不把 log-sum 替代目标当成经济成本 |
+| `eq:demand-kernel` | Normalized cubic-product diamond kernel; clipping follows the continuous-demand section. |
+| `eq:design_weights` | Each iteration computes the shared weight `F_i/(sum_p m_i^p+epsilon)` from the previous complete inventory matrix. |
+| `eq:design_partition`, `eq:design_update` | All candidate warehouses participate; adjusted costs are compared with external supply, with external supply first and warehouse ID as the tie-breaker; both parts are integrated simultaneously. |
+| `eq:design_stopping` | Full inventory-matrix Frobenius change divided by `max(1, preceding_norm)`. |
+| `eq:design_recovery` | Recovery is performed only over the terminal positive-inventory set, with the penalty removed; no second warehouse-subset search is performed. |
+| `eq:design_objective` | The final original economic cost counts shared opening cost once; the log-sum surrogate is not used as the economic objective. |
 
-`geometry.py` 从已验证的 `exp1` 数学核迁移，保留仿射细分和 Green 积分，仅增加正文允许的区域边界相交并去掉本实验不使用的完整排序 MILP/子集枚举辅助程序。八点边界 Gauss 公式对相应边多项式精确，不是二维面积采样；仍受浮点误差影响。`algorithm.py` 仅保留解析方法，没有改变更新公式、并列规则或恢复逻辑。测试独立检查截断质量、同步更新、MM 非增、零库存候选、停止和恢复。
+`geometry.py` was migrated from the verified Experiment 1 mathematical kernel, retaining affine subdivision and Green integration while adding the manuscript-permitted region clipping and removing unused complete-ordering MILP/subset-enumeration helpers. The eight-point boundary Gauss rule is exact for the relevant edge polynomials, not two-dimensional area sampling, subject to floating-point error. `algorithm.py` retains the update formula, tie rules, and recovery logic without methodological changes. Tests independently check clipping mass, synchronous updates, MM non-increase, zero-inventory candidates, stopping, and recovery.
 
-MVP-C/I 和 SAA-C/I 共享开仓决策，按备件持有库存；SAA 训练场景共享库存，分配随场景变化。MVP-I 的小数期望需求分配保持连续，只有库存设整数。矩阵保留外供成本常数，求解器 gap 对应完整总成本，而非去掉常数后的节约量。仅删除严格经济劣势分配弧。
+MVP-C/I and SAA-C/I share opening decisions and hold inventory by part; SAA uses shared inventory across training scenarios, with scenario-dependent allocation. MVP-I keeps continuous expected-demand allocation while inventory is integer. The matrix retains the external-cost constant, so the solver gap refers to full cost rather than an arbitrary savings shift. Only strictly economically dominated allocation arcs are removed.
 
-样本外执行：SD-TV-UOT/MVP-C/SAA-C 的合法连续库存逐项向上取整；整数模型按 Gurobi 默认整数性容差核验并规范化。固定仓库与库存，每场景重新优化整件供货，不受名义服务区域限制；需求由本地或外供满足，库存剩余计费。分配问题使用与整数运输等价的分配算法，另以独立显式运输 LP 核验。
+For OOS execution, valid continuous inventory for SD-TV-UOT/MVP-C/SAA-C is rounded up componentwise; integer models are normalized using Gurobi's default integrality tolerance. Warehouses and inventory are fixed, while each scenario reoptimizes integer supply without nominal service-region restrictions; demand is met locally or externally and unused inventory is charged. The assignment algorithm is equivalent to the integer transportation problem and is independently checked with an explicit transport LP.
 
-超时有可行解则保存并评价，同时保留实际 gap、目标值、有效下界及 `time_limit` 状态；无可行解则记录缺失、图中显示 Unavailable，不填零、不借用旧解、不选择性重跑。求解器 `optimal` 是其容差意义上的终止状态，不宣称精确数学全局最优。
+If a solve times out with an incumbent, the code saves and evaluates it while retaining actual gap, objective, valid bound, and `time_limit` status. If no incumbent exists, the policy is marked missing and figures show Unavailable; it is not filled with zero, an old solution, or a selectively rerun result. Solver `optimal` means termination within the configured tolerances, not an assertion of exact mathematical global optimality.
 
-## 5. 统计与两张图
+## 5. Statistics and figures
 
-- `figure-exp2-1.{png,pdf,svg}`：S/M/L 三面板，五种政策的逐场景 OOS 总成本箱线图；每箱全部 1,000 个观测。菱形是均值，黑线是中位数，须外值仍展示并参与统计，不剔除高成本场景。
-- `figure-exp2-2.{png,pdf,svg}`：五种方法随规模变化的完整规划时间，纵轴标注 `Solving time (s)` 并保留对数刻度；横坐标直接为 S、M、L，五种方法的图例在一行展示。每点是单次实测，不绘制虚构重复误差条。
-- 两张图均不标 seed、训练数量、核带宽、求解器、时间上限或 gap 目标；辅助信息和真实状态完整保存在表格、原始记录和本文档。
-- 规划时间包含 SD 的区域预处理、迭代、恢复、最终区域构造，或 benchmark 的训练生成、矩阵构造、Gurobi 建模、求解和结果整理；不包含公共输入读写、许可证初始化、Numba JIT、OOS、验证或绘图。各方法串行执行。图 2 展示总规划时间，不把 Gurobi 的纯求解时间与 SD 的完整时间混比。
-- `table-exp2-summary.csv/.tex`：15 条政策，均值、CVaR95、外供比例、费用分解、库存、取整增量、规划/求解/评价时间、实际 gap、下界与状态。SD 相对库存变化单列，不填作 MIP gap。
-- CVaR95 是该政策自身成本最高的 50 个场景平均；外供比例是总外供件数除以总需求件数。不混合政策尾部，不估计跨网络置信区间。
-- `figure-exp2-1-data.csv` 保留逐场景完整费用分解；`figure-exp2-2-data.csv` 保留单次时间和状态；`table-exp2-inventory.csv` 保留逐仓库原始与执行库存。
+- `figure-exp2-1.{png,pdf,svg}`: three S/M/L panels with boxplots of 1,000 OOS total-cost observations for five policies. Diamonds are means, black lines are medians, and whiskers/outliers remain part of the data and statistics.
+- `figure-exp2-2.{png,pdf,svg}`: complete planning time by scale, with y-axis `Solving time (s)` on a log scale, x-axis labels S/M/L, and a single-row legend. Each point is one measured run; no artificial repeat error bars are shown.
+- Neither figure displays seed, training size, bandwidth, solver, time limit, or gap target; these details and actual statuses remain in the tables, raw records, and this README.
+- Planning time includes SD preprocessing, iterations, recovery, and final region construction, or benchmark scenario generation, matrix construction, Gurobi model building, solving, and result assembly. It excludes shared input I/O, license initialization, Numba JIT, OOS evaluation, validation, and plotting. Policies run serially. Figure 2 therefore compares complete planning time, not Gurobi-only solver time against SD time.
+- `table-exp2-summary.csv/.tex`: 15 policies with mean cost, CVaR95, external share, cost components, inventory, rounding increment, planning/solver/evaluation time, actual gap, bound, and status. SD relative inventory change is stored separately and is not filled as an MIP gap.
+- CVaR95 is the mean of the policy's 50 highest-cost scenarios; external share is total external units divided by total demand. Policy tails are not pooled and cross-network confidence intervals are not estimated.
+- `figure-exp2-1-data.csv` contains complete per-scenario cost components; `figure-exp2-2-data.csv` contains one timing/status row per policy; `table-exp2-inventory.csv` contains raw and executed inventory by warehouse.
 
-图使用可编辑 SVG、嵌入字体 PDF 和 300 dpi PNG。旧项目结果、实验一和论文正文不覆盖；本目录的论文快照仅作方法核对。
+Figures use editable SVG, embedded-font PDF, and 300 dpi PNG output. Legacy-project results, Experiment 1, and the manuscript are not overwritten; the local manuscript snapshot is used only for method checks.
 
-## 6. Gurobi 替换与结果保留
+## 6. Gurobi migration and result preservation
 
-本轮只重新运行原来使用 COPT 的 12 个 MVP/SAA 政策及其 12,000 个 OOS 场景成本。三个 SD-TV-UOT 政策不调用 MIP 求解器，原始库存、轨迹、实测时间及 3,000 个场景成本全部复用。200 个训练场景、1,000 个共同测试场景、5 km 带宽、费用和随机子流均保持不变。
+This run re-solved the 12 MVP/SAA policies that previously used COPT and recomputed their 12,000 OOS scenario costs. The three solver-free SD-TV-UOT policies reused their original inventory, trajectories, measured times, and 3,000 scenario costs. The 200 training scenarios, 1,000 common test scenarios, 5 km bandwidth, costs, and random streams were unchanged.
 
-切换前 72 个源码、输入、原始结果和图表文件完整备份于 `input/before-gurobi-20261018.zip`。程序不接受旧 COPT benchmark 结果充当 Gurobi 结果。数学建模函数逐字核验不变，仅替换求解器接口及其参数名。共享开仓、库存类型、有效界、外供常数和可行性检查不变；Gurobi 使用默认可行性/整数性容差、求解器 seed=0、单线程、1,800 秒和 0.001 相对 gap。
+The pre-switch archive containing 72 source, input, raw-result, and figure files is stored at `input/before-gurobi-20261018.zip`. The program does not accept old COPT benchmark records as Gurobi records. The mathematical model construction was verified as textually unchanged apart from solver-interface parameter names. Shared opening, inventory types, valid bounds, external-cost constant, and feasibility checks are unchanged; Gurobi uses its default feasibility/integrality tolerances, solver seed=0, one thread, 1,800 seconds, and target gap 0.001.
 
-`input/source-compatibility.json` 仅通过精确源码/记录哈希允许复用三个求解器无关的 SD-TV-UOT 政策；只忽略其历史设置中的版本号及新增求解器字段，不忽略任何科学参数。旧的完整 COPT 结果和接口修正证明保留在备份中，不混入当前表格。当前表格新增 solver 和 solver_version，明确区分求解器来源。
+`input/source-compatibility.json` permits exact source/record-hash reuse only for the three solver-free SD-TV-UOT records. It ignores only historical version and newly added solver fields, not scientific parameters. The old complete COPT results and interface proof remain archived and are not mixed into the current tables. Current tables include `solver` and `solver_version` fields.
 
-图中的 Solving time 是各方法端到端的完整规划计算时间，继续读取 planning_seconds，不改成只计优化器调用的 solver_seconds。后者仍单独保存于表格；SD-TV-UOT 没有独立的 MIP 优化器调用，不能将其完整时间与 benchmark 的纯优化器时间混比。此处仅改图轴名称、图例布局和规模标签，不改计时定义。
+Figure 2's `Solving time` is the end-to-end planning time read from `planning_seconds`, not only the optimizer call in `solver_seconds`. The latter remains a separate table field; SD-TV-UOT has no MIP optimizer call, so its complete planning time cannot be compared to benchmark-only optimizer time. This section changes only the axis label, legend layout, and scale labels, not the timing definition.
 
-当前状态与逐次真实 gap 以 `output/completion.json`、`output/table-exp2-summary.csv` 和 `output/validation.json` 为准。旧 COPT 的最大 gap、耗时和测试记录只能从归档中作为历史对照读取。
+The current state and actual gaps are defined by `output/completion.json`, `output/table-exp2-summary.csv`, and `output/validation.json`. Historical COPT gaps, timings, and tests are available only as archived comparisons.
 
-### 本轮完成结果
+### Completed results for this run
 
-12 个 benchmark 政策均由 Gurobi 重新求解，并在 1,800 秒内达到 0.1% 相对 gap 目标；没有超时或缺失解。最大实际 gap 为 0.0009877656826097255（约 0.098777%，S/MVP-I）。原始可行解、目标值、下界和实际 gap 已保存，未把非零 gap 改写为零。12 次 benchmark 完整规划时间合计 528.808 秒。图 2 对应的单次完整规划时间如下，单位为秒：
+All 12 benchmark policies were re-solved by Gurobi within 1,800 seconds and reached the 0.1% relative-gap target; there were no timeouts or missing incumbents. The maximum actual gap was 0.0009877656826097255 (approximately 0.098777%, S/MVP-I). Incumbent, objective, bound, and actual gap were retained without rewriting a nonzero gap as zero. The 12 benchmark complete-planning times totaled 528.808 seconds. Figure 2 uses these complete planning times (seconds):
 
-| 规模 | SD-TV-UOT（复用） | MVP-C | MVP-I | SAA-C | SAA-I |
+| Scale | SD-TV-UOT (reused) | MVP-C | MVP-I | SAA-C | SAA-I |
 |---|---:|---:|---:|---:|---:|
 | S | 0.572 | 0.095 | 0.918 | 6.584 | 6.623 |
 | M | 1.723 | 0.285 | 1.160 | 72.189 | 125.052 |
 | L | 3.076 | 0.847 | 1.959 | 156.042 | 157.054 |
 
-15 项测试全部通过；完整核验覆盖 15 个政策、15,000 条场景成本、850 个核的独立边界积分及 105 次独立运输 LP，运输费用最大绝对误差为 1.82e-12 欧元。仅重绘模式再次运行后，38 个原始政策、场景、CSV 和 PNG 文件的哈希均不变。
+All 15 tests passed. The complete audit covered 15 policies, 15,000 scenario costs, 850 independent kernel-boundary integrals, and 105 independent transport LPs; the maximum absolute transport-cost error was 1.82e-12 euros. After running report-only mode, hashes of 38 policy, scenario, CSV, and PNG files remained unchanged.
 
-`output/gurobi-switch-audit.json` 保存本次迁移审计：三个 SD 政策及其场景文件逐字节不变，冻结输入和训练/测试哈希不变，12 个 benchmark 均有新的 Gurobi 运行记录；`output/preservation-audit.json` 是上一轮对旧项目及实验一的保留审计，本次不修改这些目录。固定输入下多数政策仍得到相同的执行库存及 OOS 成本，这是重新求解后的结果，不是借用 COPT 记录。
+`output/gurobi-switch-audit.json` records the migration audit: the three SD policies and their scenario files are byte-for-byte unchanged; frozen inputs and train/test hashes are unchanged; and all 12 benchmark policies have new Gurobi records. `output/preservation-audit.json` is the earlier preservation audit for the legacy project and Experiment 1 and is not modified by this repository. Under the fixed inputs, many policies have the same executed inventory and OOS costs after the new solve; those values are the new solve's results, not borrowed COPT records.

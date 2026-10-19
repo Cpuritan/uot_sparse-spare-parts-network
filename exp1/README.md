@@ -1,37 +1,37 @@
-# 实验一：固定实例解质量与多实例 MC 轨迹诊断
+# Experiment 1: Fixed-Instance Solution Quality and Multi-Instance MC Trajectory Diagnostics
 
-本目录是可独立运行的论文实验，不导入旧项目模块或旧求解结果。2026-10-18 重新整理；方法依据为 `input/manuscript.tex` 中的联合选址—库存—分配模型和 Algorithm 1。正文快照仅供核对方法，正文原有实验段落的实例数量与旧数值不作为本轮结果。
+This directory is a self-contained paper experiment. It does not import modules or solver results from the legacy project. It was reorganized on 2026-10-18; the implementation follows the joint location-inventory-allocation model and Algorithm 1 in `input/manuscript.tex`. The manuscript snapshot is provided for method checks only; the instance counts and numerical values in the manuscript's older experiment section are not used for this run.
 
-## 1. 本轮范围
+## 1. Scope
 
-| 内容 | 实例 | 重复与输出 |
+| Study | Instances | Repetitions and outputs |
 |---|---|---|
-| 解质量与计算时间 | S/M/L 各一个固定实例，seed=42 | 每实例解析一次、连续模型 MILP 一次、三档 MC 各 20 次；`table-exp1-quality.csv/.tex` |
-| 库存、共享权重、仓库激活与区域演化 | 固定 M、seed=42 的解析运行 | 八面板 `figure-exp1-1`，地图为 t=1、3、5、恢复 R |
-| MC trajectory deviation | S/M/L **各 20 个实例**，seed=42—61 | 每实例、每档 MC **5 次重复**；`figure-exp1-2` 每组 20 个点 |
+| Solution quality and computing time | One fixed instance for each of S/M/L, seed=42 | One analytical run, one continuous-model MILP, and 20 repetitions at each of three MC budgets per instance; `table-exp1-quality.csv/.tex` |
+| Inventory, shared weights, warehouse activation, and region evolution | Fixed M, seed=42, analytical run | Eight-panel `figure-exp1-1`; maps at t=1, 3, 5, and recovery R |
+| MC trajectory deviation | **20 instances for each of S/M/L**, seeds 42–61 | **5 MC repetitions** at each budget and instance; 20 points per group in `figure-exp1-2` |
 
-预算均为 1,000 / 10,000 / 100,000。seed=42 的前五次 MC 同时用于两项研究，其余十五次只用于固定实例解质量；不扩大轨迹诊断的时间窗口。总计 60 条解析运行、1,035 条 MC 运行、3 条 MILP，共 **1,098 条唯一规划记录**；其中固定实例质量表有 186 条原始记录，轨迹统计有 180 个“实例—预算”观测和 900 条逐重复诊断。
+The budgets are 1,000 / 10,000 / 100,000. The first five MC repetitions for seed=42 are shared by both studies; the remaining fifteen are used only for fixed-instance quality. The trajectory-diagnostic time window is not expanded. In total, the experiment contains 60 analytical runs, 1,035 MC runs, and 3 MILPs: **1,098 unique planning records**. The fixed-instance quality table contains 186 raw records; the trajectory statistics contain 180 instance-budget observations and 900 per-repetition diagnostics.
 
-本轮不运行实验二、SAA 或灵敏度实验，不覆盖旧项目图表。恢复的是历史“20 个实例 × 5 次重复”的研究设计，不是将旧固定实例的 20 次重复改贴成不同实例，也不是读取历史结果重绘。
+This directory does not run Experiment 2, SAA, or sensitivity experiments, and it does not overwrite legacy-project figures. It restores the historical “20 instances × 5 repetitions” trajectory design; it does not relabel 20 repetitions from one fixed instance as different instances, and it does not redraw figures from historical results.
 
-## 2. 扁平结构与运行
+## 2. Flat layout and execution
 
 ```text
 exp1/
-  environment.py   冻结实例、需求、费用和随机流
-  geometry.py      连续区域划分、Green 边界积分与完整费用排序细分
-  algorithm.py     正文重加权算法及仅替换积分的 MC 对照
-  evaluation.py    给定库存的连续模型原始/对偶成本区间
-  benchmark.py     同一连续模型的 MILP 参照
-  diagnostics.py   路径对齐、D/V/E 与抽样审计
-  experiment1.py   唯一运行入口、逐条检查点、统计
-  plot_exp1.py     两张论文图及可核对的绘图数据
-  test_exp1.py     方法与实验口径核验
-  input/           20 份冻结主实例、60 份派生实例和论文方法快照
-  output/          原始解、诊断、统计表、图、日志和审计
+  environment.py   Frozen instances, demand, costs, and random streams
+  geometry.py      Continuous regions, Green boundary integration, and complete cost-order subdivision
+  algorithm.py     Manuscript reweighted algorithm and MC counterpart with only the integrator replaced
+  evaluation.py    Continuous-model primal/dual cost intervals for fixed inventory
+  benchmark.py     MILP reference for the same continuous model
+  diagnostics.py   Path alignment, D/V/E metrics, and sampling audits
+  experiment1.py   Single entry point, checkpoints, and statistics
+  plot_exp1.py     Two paper figures and auditable plotting data
+  test_exp1.py     Method and experiment-definition checks
+  input/           20 frozen master instances, 60 derived instances, and manuscript snapshot
+  output/          Generated solutions, diagnostics, tables, figures, logs, and audits
 ```
 
-在本目录执行：
+Run from this directory:
 
 ```powershell
 python -m unittest -v test_exp1
@@ -39,40 +39,40 @@ python -u experiment1.py
 python experiment1.py --report-only
 ```
 
-本机 Python 为 `D:/Anaconda3/python.exe`。依赖版本见 `requirements.txt`；MILP 需要有效的 Gurobi 许可证。`--report-only` 只读本目录已完成结果并重新生成统计和图，不重新规划。
+The reference environment uses Python `D:/Anaconda3/python.exe`. Exact dependency versions are listed in `requirements.txt`; the MILP requires a valid Gurobi license. `--report-only` reads completed local results and regenerates statistics and figures without planning again.
 
-每次规划后原子写入 `output/case_<scale>_<seed>.json`。中断后运行相同命令可续跑已完成的本地记录；尚未完成的一次规划重新执行，不伪造耗时或状态。核心源码或输入哈希不一致时拒绝混用结果。修改科学设置后应另存旧输出再完整重跑，不能直接绕过哈希校验。
+Each planning record is atomically written to `output/case_<scale>_<seed>.json`. Re-running the same command resumes completed local records; an unfinished planning call is rerun without fabricating time or status. The program rejects results whose core-source or input hashes differ. After changing scientific settings, preserve the old output and perform a separate full run; do not bypass the hash checks.
 
-## 3. 与正文方法逐项对应
+## 3. Correspondence with the manuscript method
 
-| 正文对象 | 实现与核验 |
+| Manuscript object | Implementation and verification |
 |---|---|
-| `eq:design_objective`：共享一次开仓费 | 两类库存共享活动集合；连续原始经济成本包含配送、外供、滞留和一次开仓费 |
-| `eq:design_weights` | `algorithm.run_design`：每轮同步计算 `F_i/(sum_p m_i^p + epsilon)`，运行内 epsilon 固定为 1 |
-| `eq:design_partition`、`eq:design_update` | 所有候选仓库参与，包括零库存仓库；按调整费用分区后同时积分两类需求；并列优先级为外供 0、再按仓库编号递增 |
-| 联合优化库存与分配 | 设计迭代内没有给定库存的额外对偶优化，也没有整数取整或随机场景测试 |
-| `eq:design_stopping` | Frobenius 变化除以 `max(1, preceding_norm)`，容差 1e-6，最多 200 轮；保留真实停止状态 |
-| `eq:design_recovery` | 只在终止时严格正库存的集合内置零惩罚、重算库存，删除零需求仓库；不再优化仓库子集 |
-| `eq:design_logsum` | MM 非增性针对固定 log-sum 替代目标，不要求原始经济成本逐轮下降 |
-| 精确区域积分 | `geometry.ExactEvaluator`：局部多项式核、仿射费用共同细分、Green 边界积分；八点边界 Gauss 公式对相应边多项式精确，不是区域采样 |
-| 给定库存的连续评价 | `evaluation.continuous_cost`：设计完成后独立计算原始可行上界和对偶下界，计时不纳入规划；不改变库存 |
-| 连续模型 MILP | `benchmark.solve_continuous_milp`：完整费用排序细分及精确需求/费用积分，不使用解析算法选出的仓库或分区限制参照模型 |
+| `eq:design_objective`: one shared opening cost | Both inventory parts share one active-warehouse set; the continuous economic cost includes local delivery, external supply, leftover inventory, and one opening cost. |
+| `eq:design_weights` | `algorithm.run_design` synchronously computes `F_i/(sum_p m_i^p + epsilon)` at every iteration, with epsilon fixed at 1. |
+| `eq:design_partition`, `eq:design_update` | Every candidate warehouse participates, including zero-inventory warehouses; both demand parts are integrated after adjusted-cost partitioning. Ties prioritize external supply 0 and then increasing warehouse ID. |
+| Joint inventory-allocation optimization | The design iteration has no additional dual optimization for fixed inventory, integer rounding, or random-scenario testing. |
+| `eq:design_stopping` | Frobenius change divided by `max(1, preceding_norm)`, tolerance 1e-6, at most 200 iterations; the actual stopping status is retained. |
+| `eq:design_recovery` | Zero-penalty recovery is performed only over the strictly positive terminal inventory set; zero-demand warehouses are removed and the warehouse subset is not optimized again. |
+| `eq:design_logsum` | MM non-increase is checked for the fixed log-sum surrogate; the original economic cost is not required to decrease at every iteration. |
+| Exact regional integration | `geometry.ExactEvaluator` uses local polynomial kernels, common affine subdivision, and Green boundary integration. Eight-point boundary Gauss quadrature is exact for the corresponding edge polynomials; it is not area sampling. |
+| Continuous evaluation for fixed inventory | `evaluation.continuous_cost` independently computes the original primal feasible upper bound and dual lower bound after design; its time is excluded from planning and it does not change inventory. |
+| Continuous-model MILP | `benchmark.solve_continuous_milp` uses complete cost-order subdivision and exact demand/cost integration. It does not constrain the reference solution to the analytical algorithm's warehouses or regions. |
 
-`geometry.py` 和 `algorithm.py` 从现有已核验实现迁移，科学计算未重写；其余模块仅截取本实验需要的部分并改为本地输入/输出。14 项方法/定义测试覆盖冻结输入、独立区域积分校核、费用公式、并列规则、共享权重、零库存候选、停止/恢复、固定库存评价、完整子集枚举对照 MILP、嵌套样本和 D/V 定义。第 15 项测试在全量结果存在后独立读取所有原始轨迹，不调用诊断函数，重算全部 180 个 D/V 并核对统计表。实际运行另核查每条轨迹的质量守恒、共享权重、样本哈希和统计数量。
+`geometry.py` and `algorithm.py` were migrated from the already verified implementation without changing the scientific calculations. The remaining modules contain only what this experiment needs and use local input/output paths. Fourteen method/definition tests cover frozen inputs, independent regional integration, cost formulas, tie rules, shared weights, zero-inventory candidates, stopping/recovery, fixed-inventory evaluation, complete-subset MILP comparison, nested samples, and D/V definitions. A fifteenth test, enabled after full results exist, independently reads every raw trajectory, recomputes all 180 D/V values without calling the diagnostic function, and checks the summary tables. The actual run also audits mass conservation, shared weights, sample hashes, and record counts for every trajectory.
 
-## 4. 输入和随机性
+## 4. Inputs and randomness
 
-沿用共同 v2-r3 环境，不重新挑选有利实例或调参：S/M/L 区域边长分别为 30/45/60 km，仓库数 16/24/32，设备数 100/250/500。各规模使用同一 seed 的嵌套主实例池，因此不同规模是配对设计；不同 seed 的主实例独立生成。
+The common v2-r3 environment is used without selecting favorable instances or tuning parameters: S/M/L have side lengths 30/45/60 km, 16/24/32 warehouses, and 100/250/500 devices. Within each scale, instances use the same nested master pool for a given seed, so scales are paired; master instances from different seeds are independent.
 
-Part 1 概率为 U(0.15,0.35)，Part 2 为 U(0.05,0.25)，独立随机流生成；两类需求与库存不是复制关系。Diamond triweight 核、带宽 1 km、共享固定费 120—180、滞留费 16 和原费用参数不变。初值是每类总需求在所有候选仓库间均分 `m_i^p=Q_p/M`。
+Part 1 probabilities are generated from U(0.15, 0.35), and Part 2 probabilities from U(0.05, 0.25), using independent random streams. The two demand and inventory parts are not copies. The Diamond triweight kernel, 1 km bandwidth, shared fixed cost 120–180, leftover cost 16, and original cost parameters are unchanged. The initial inventory is `m_i^p=Q_p/M`, evenly distributing each part's total demand over all candidate warehouses.
 
-`input/master_42.npz` 至 `master_61.npz` 复制既有冻结输入，不复制求解结果；每次生成会与冻结数组逐元素核对。`input/instance_*.npz` 是本轮生成并保存的派生实例。
+`input/master_42.npz` through `master_61.npz` are frozen inputs copied from the validated environment, not solver results; every generation checks arrays element by element against these files. `input/instance_*.npz` contains the derived instances generated for this run.
 
-MC 随机流为 `[20261017, instance_seed, 7, repeat, part]`；每次重复及备件相互独立，预算之间使用相同流的嵌套前缀，同一次完整算法内不重新抽样。按各类总需求分配总预算，样本权重为 `Q_p/B_p`，使用精确密度混合采样器。恢复至可复现的历史随机流设计，不沿用随后“操作系统熵新批次”的固定实例诊断。各规模同 seed 使用配对随机数，不将其解释为跨规模独立重复。
+MC random streams use `[20261017, instance_seed, 7, repeat, part]`. Repetitions and parts are independent; budgets use nested prefixes of the same stream, and one complete algorithm run does not resample internally. Each part receives its share of the total budget, with sample weights `Q_p/B_p`, using an exact density-mixture sampler. This restores the reproducible historical random-stream design rather than the later fixed-instance diagnostic batch based on operating-system entropy. Scales sharing a seed use paired random numbers and are not interpreted as independent cross-scale replications.
 
-## 5. 路径偏离的统计单位
+## 5. Statistical unit for trajectory deviation
 
-记 `z_t` 为包含外供（第 0 行）和所有仓库、两类备件的质量矩阵；解析路径为 `a_t`，第 r 次 MC 路径为 `z_rt`，每实例五次重复。该实例的共同窗口 H 取其解析与三档各五次 MC 的最大停止轮数。包含 t=0；提前停止的路径保持最后一轮值，不补零、不插值、不加入最终恢复 R。
+Let `z_t` be the mass matrix containing external supply (row 0), all warehouses, and both spare-parts columns; let `a_t` be the analytical path and `z_rt` the MC path for repetition r. Each instance has five repetitions. The common window H is the largest stopping time among the analytical path and the five MC paths at all three budgets. It includes t=0; an early-stopping path keeps its final iterate, is not padded with zeros or interpolated, and does not include final recovery R.
 
 ```text
 D = sqrt(mean_{r=1..5, t=0..H} ||z_rt - a_t||_F^2) / Q
@@ -80,68 +80,66 @@ V = sqrt(mean_{r=1..5, t=0..H} ||z_rt - mean_r(z_rt)||_F^2) / Q
 E = sqrt(mean_{r=1..5, t=1..T_analytic} ||MC_r(w_t) - Exact(w_t)||_F^2) / Q
 ```
 
-E 在解析参考的相同权重处重放积分，区分单步积分误差与反馈演化偏离。D 是逐重复偏离的**均方根**，不是五个偏离值的算术均值；验证 `D² = V² + mean_path_deviation²`。分母始终是该实例总需求，不能把备件列或外供行漏掉。
+E replays integration at the analytical reference weights and separates one-step integration error from feedback-evolution deviation. D is the per-repetition **root mean square** deviation, not the arithmetic mean of five deviations; the identity `D² = V² + mean_path_deviation²` is checked. The denominator is always the instance's total demand; neither spare-parts columns nor the external-supply row may be omitted.
 
-`figure-exp1-2` 每个圆点是一个实例的 D；S/M/L × 三预算共九组，每组 20 点。箱体为实例间四分位数和中位数，须与须外观测一起展示全部点。论文图仅显示 D，不再显示 V 的空心菱形或图例；原始诊断中的辅助指标保留供审计。只有横向位置加入绘图抖动，纵坐标不裁剪、不修改、不按结果重抽。不要求 D 随预算单调，也不将路径偏离自动解释为经济成本差距。
+Each point in `figure-exp1-2` is one instance's D. The nine scale-budget groups contain 20 points each. Boxes show the across-instance quartiles and median, with whiskers and outliers retained. The paper figure displays D only; hollow-diamond V markers and their legend are omitted, while auxiliary diagnostics remain available for audit. Only the horizontal position receives jitter; the vertical values are neither clipped nor altered, and results are not resampled. D is not required to be monotone in budget and is not automatically interpreted as an economic-cost gap.
 
-固定实例质量表的 MC 标准差仅刻画给定实例内的算法随机性，不是随机网络总体的标准误或置信区间。多实例路径统计与固定实例质量统计不可混为一个总体结论。
+The MC standard deviation in the fixed-instance quality table describes algorithmic randomness for a given instance; it is not a standard error or confidence interval for a random-network population. The multi-instance trajectory statistics and fixed-instance quality statistics must not be pooled into one conclusion.
 
-## 6. 求解状态、输出与审计
+## 6. Solver status, outputs, and audits
 
-MILP 单线程、时间上限 1,800 秒、目标相对 gap 0.001，保留全外供可行起点。到时保留可行解、有效下界、实际 gap 和 `time_limit` 状态，不称为精确最优；没有可行解时明确缺失。Gurobi 的 `optimal` 状态表示其设定 gap/数值容差内达标，并非误差严格为零。
+MILPs use one thread, a 1,800-second time limit, and a 0.001 relative gap target, with an all-external feasible starting point. At the time limit, a feasible incumbent, valid bound, actual gap, and `time_limit` status are retained; the result is not called exactly optimal. A missing incumbent is reported as missing. Gurobi's `optimal` status means that its gap and numerical tolerances were satisfied, not that the mathematical error is exactly zero.
 
-质量表给出连续成本上下界与相对真实最优值的 gap 区间，而不是把 MILP incumbent 当作已证精确最优；`quality_runs.csv` 同时保留逐次实际 solver gap 和求解状态。浮点安全余量不等同于严格区间算术证明。连续评价未达到目标时保留 `interval_only` 和实际区间，不伪称通过认证。
+The quality table reports continuous-cost primal/dual intervals and optimality-gap intervals relative to the reference solution; it does not treat an MILP incumbent as a proven exact optimum. `quality_runs.csv` retains each actual solver gap and status. Floating-point safety margins are not strict interval-arithmetic proofs. If continuous certification is not reached, the record retains `interval_only` and the actual interval rather than claiming certification.
 
-- `case_*.json`：每条规划的全轨迹、恢复库存、状态、实测规划时间；固定实例另含连续成本评价。
-- `diagnostic_*.json/.npz`：质量矩阵、对齐路径、冻结参考重放、E/D/V、逐次偏离、样本哈希。
-- `quality_runs.csv` / `table-exp1-quality.csv/.tex`：固定实例原始与汇总质量、时间结果。
-- `trajectory_instances.csv` / `trajectory_repeats.csv`：180 个实例观测及 900 条重复诊断。
-- `figure-exp1-1.png/.pdf/.svg`、`figure-exp1-2.png/.pdf/.svg`：300 dpi 位图与可编辑文字的矢量图。
-- `figure-exp1-1-data.json`、`figure-exp1-2-summary.csv`、`figure-captions.json`：绘图数据及完整图注。
-- `environment.json` / `progress.json` / `run.log` / `validation.json`：环境、进度、日志、数量/状态/文件哈希及 SVG 的全部 180 个散点核验。
+- `case_*.json`: complete planning trajectory, recovered inventory, status, and measured planning time; fixed instances also include continuous-cost evaluation.
+- `diagnostic_*.json/.npz`: quality matrices, aligned paths, frozen-reference replay, E/D/V metrics, per-step deviations, and sample hashes.
+- `quality_runs.csv` / `table-exp1-quality.csv/.tex`: raw and summarized fixed-instance quality and timing results.
+- `trajectory_instances.csv` / `trajectory_repeats.csv`: 180 instance observations and 900 repetition diagnostics.
+- `figure-exp1-1.png/.pdf/.svg`, `figure-exp1-2.png/.pdf/.svg`: 300 dpi raster figures and editable vector figures.
+- `figure-exp1-1-data.json`, `figure-exp1-2-summary.csv`, `figure-captions.json`: plotting data and complete captions.
+- `environment.json` / `progress.json` / `run.log` / `validation.json`: environment, progress, logs, counts/statuses/file hashes, and SVG checks for all 180 plotted points.
 
-Numba 编译和求解器环境初始化单独预热；计时包括方法自身预处理、迭代、恢复等，不含连续评价、文件保存和绘图。所有正式规划串行运行，避免并发争抢影响方法时间比较。
+Numba compilation and solver initialization are warmed up separately. Timing includes method preprocessing, iterations, and recovery, but excludes continuous evaluation, file saving, and plotting. All formal planning runs are serial to avoid contention in method-time comparisons.
 
-## 7. 本次完成记录（2026-10-18）
+## 7. Completed run record (2026-10-18)
 
-全部 60 个实例、1,098 条唯一规划已完成：1,095 条解析/MC 运行均正常收敛，3 条 MILP 均返回 `optimal`，实际求解 gap 均为 0，无超时或缺失解。186 条固定实例连续评价全部达到 `certified` 标准。15 项测试全部通过，包括独立从原始轨迹复算全部 180 个 D/V。两张图的 PNG/PDF/SVG 均已输出并检查；SVG 核验九组散点各 20 个。
+All 60 instances and 1,098 unique planning records were completed: 1,095 analytical/MC runs converged normally, and all 3 MILPs returned `optimal` with actual solver gap 0; there were no timeouts or missing incumbents. All 186 fixed-instance continuous evaluations met the `certified` standard. All 15 tests passed, including independent recomputation of all 180 D/V values from raw trajectories. PNG/PDF/SVG versions of both figures were generated and checked; SVG validation confirmed 20 points in each of the nine scatter groups.
 
-新 `figure-exp1-2` 的实例间 D 中位数（%）：
+The instance-level median D values in the new `figure-exp1-2` are (%):
 
-| 规模 | MC 1,000 | MC 10,000 | MC 100,000 |
+| Scale | MC 1,000 | MC 10,000 | MC 100,000 |
 |---|---:|---:|---:|
 | S | 6.483 | 1.217 | 0.369 |
 | M | 10.316 | 1.837 | 0.542 |
 | L | 6.162 | 3.200 | 0.590 |
 
-表中为 20 个实例的中位数，不能替代固定实例内重复的统计。全部高偏离观测原样保留；多实例版本仍有离群值，不因恢复研究口径而删除它们。原始散点可由 `trajectory_instances.csv` 的 scale/seed/budget 直接追溯至对应轨迹。
+These are medians over 20 instances and do not replace the fixed-instance repetition statistics. All high-deviation observations are retained; outliers in the multi-instance version are not removed for the recovery study. Raw points can be traced from `trajectory_instances.csv` using its scale/seed/budget fields.
 
+## 8. Historical COPT migration record (2026-10-18; superseded by Section 9)
 
-## 8. 历史 COPT 迁移记录（2026-10-18，已被第 9 节替代）
+For the revision, the three fixed-instance MILPs were solved with COPT 8.0.6 without reusing results or timings from the previous solver. The original results and source files were saved under `archive/pre_copt_20261018/`.
 
-按论文修订要求，三个固定实例的 MILP 已使用 COPT 8.0.6 重新求解，未复用原求解器的解或计时。原始结果和源文件保存在 `archive/pre_copt_20261018/`。
+Only the solver interface in `benchmark.py` changed; input, geometry integration, analytical/MC algorithms, and the SciPy continuous evaluator were hash-checked as unchanged. The 1,095 analytical/MC records and their timings were retained, the three MILPs and continuous evaluations were rerun, and all 186 optimality-gap intervals were updated from the new COPT bounds. The 60-instance trajectories and both figure datasets were unchanged. Each run file retains its source-signature and migration pointers.
 
-迁移只改变 `benchmark.py` 的求解器接口；输入、几何积分、解析/MC 算法和 SciPy 连续评价器均通过哈希核验保持一致。保留 1,095 条解析/MC 原始记录及其计时，重新计算三个 MILP 及其连续评价，并从新的 COPT 上下界更新全部 186 条质量记录的最优性差距。60 个实例的轨迹与两张图的数据均未改变。各运行文件保留原代码签名和迁移记录指针。
-
-| 规模 | COPT 完整规划时间（s） | 原始目标成本（EUR） | 实际相对 MIP gap |
+| Scale | COPT complete planning time (s) | Original objective cost (EUR) | Actual relative MIP gap |
 |---|---:|---:|---:|
 | S | 2.076765 | 2204.86390319 | 0 |
 | M | 25.376504 | 5172.94845710 | 0 |
 | L | 330.767287 | 10111.78059921 | 0 |
 
-本轮 COPT 环境及结果已归档至 `archive/pre_gurobi_20261018/`；历史原始解和审计另保留在 `output/copt_milp_*.json` 与 `output/solver_migration_copt.json`。当前求解器及正式结果以第 9 节为准。
+The COPT environment and results were archived under `archive/pre_gurobi_20261018/`; historical raw solutions and audits were also retained in `output/copt_milp_*.json` and `output/solver_migration_copt.json`. The current solver and formal results are defined by Section 9.
 
+## 9. Current Gurobi rerun record (2026-10-18)
 
-## 9. 当前 Gurobi 重算记录（2026-10-18）
+Under the latest revision, Experiment 1 uses Gurobi 13.0.1. The three fixed-instance MILPs were solved again without reusing historical Gurobi or COPT solutions or timings. The COPT results and pre-Gurobi source were saved under `archive/pre_gurobi_20261018/`.
 
-按最新修订要求，实验一统一使用 Gurobi 13.0.1，三个固定实例的 MILP 均重新求解，没有复用历史 Gurobi 或 COPT 解及计时。COPT 结果及迁移前代码保存在 `archive/pre_gurobi_20261018/`。
+Only the solver interface changed; the same one-thread setting, 1,800-second limit, and 0.001 relative-gap target were retained. Input, geometry integration, analytical/MC algorithms, continuous evaluator, and MILP coefficients were checked as unchanged. The 1,095 analytical/MC records were retained, the three MILPs and continuous evaluations were rerun, and all 186 optimality-gap intervals were recomputed from the new Gurobi bounds. The two figure datasets were unchanged.
 
-仅切换求解器接口，保留相同单线程、1800 秒上限和 0.001 相对 gap 目标。输入、几何积分、解析/MC 算法、连续评价器和 MILP 系数均已核验保持一致；保留 1,095 条解析/MC 原始记录，重新求解三个 MILP 并进行连续评价，从新的 Gurobi 上下界重新计算全部 186 条质量记录的差距区间。两张图的数据不变。
-
-| 规模 | Gurobi 完整规划时间（s） | 原始目标成本（EUR） | 实际相对 MIP gap |
+| Scale | Gurobi complete planning time (s) | Original objective cost (EUR) | Actual relative MIP gap |
 |---|---:|---:|---:|
 | S | 1.617595 | 2204.86390319 | 0 |
 | M | 9.695470 | 5172.94845710 | 0 |
 | L | 39.426005 | 10111.78059921 | 0 |
 
-当前环境、原始解、求解日志和迁移审计见 `output/environment.json`、`output/gurobi_milp_*.json`、`output/gurobi_rerun.log` 和 `output/solver_migration_gurobi.json`。当前 `case_*.json`、质量表和验证文件均使用本次 Gurobi 结果。
+The current environment, raw solutions, solver logs, and migration audit are referenced by `output/environment.json`, `output/gurobi_milp_*.json`, `output/gurobi_rerun.log`, and `output/solver_migration_gurobi.json`. The current `case_*.json`, quality tables, and validation files use the Gurobi results.
