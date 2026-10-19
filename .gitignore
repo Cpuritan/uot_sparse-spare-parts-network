@@ -1,0 +1,14 @@
+# Generated experiment results and run-time state
+output/
+*/output/
+__pycache__/
+*.py[cod]
+*.log
+
+# Local solver credentials
+*.lic
+
+# Temporary editor and notebook files
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
