@@ -1,0 +1,1297 @@
+%% 
+%% Copyright 2019-2021 Elsevier Ltd
+%% 
+%% This file is part of the 'CAS Bundle'.
+%% --------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-sc documentclass for 
+%% single column output.
+
+\documentclass[a4paper,fleqn]{cas-sc}
+
+% If the frontmatter runs over more than one page
+% use the longmktitle option.
+
+%\documentclass[a4paper,fleqn,longmktitle]{cas-sc}
+
+\usepackage{amsthm}
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{plain}
+\usepackage{orcidlink}
+\usepackage{amsmath, amssymb, bm, booktabs, longtable, geometry}
+\usepackage{float}
+\usepackage{array,multirow}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Use the final shipped-page total after the CAS auxiliary definitions are loaded.
+\AtBeginDocument{\renewcommand*{\lastpage}{\PreviousTotalPages}}
+%\usepackage[numbers]{natbib}
+\usepackage[authoryear]{natbib}
+%\usepackage[authoryear,longnamesfirst]{natbib}
+
+%%%Author macros
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+%%%
+
+% Uncomment and use as if needed
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newdefinition{rmk}{Remark}
+%\newproof{pf}{Proof}
+%\newproof{pot}{Proof of Theorem \ref{thm}}
+
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{0.7}
+\def\textpagefraction{.001}
+\let\printorcid\relax % 可去掉页面下方的ORCID(s)
+
+% Short title
+% \shorttitle{<short title of the paper for running head>} 
+\shorttitle{Sparse Spare-Parts Network Design: An Unbalanced Optimal Transport Framework for JLIA}    
+
+% Short author
+\shortauthors{}
+
+
+% Main title of the paper
+\title[mode = title]{Sparse Spare-Parts Network Design: An Unbalanced Optimal Transport Framework for Joint Location-Inventory-Allocation}  
+
+
+\author[1]{Qifeng Bao~\orcidlink{0009-0007-9880-8989}}[orcid=0009-0007-9880-8989]
+\ead{qifengbaobao@gmail.com} 
+
+
+\author[1]{Meiyue Zhao}
+\ead{myzhao0909@gmail.com}
+
+
+\author[1,2]{Yu Zhang~\orcidlink{0000-0002-1873-2555}}[orcid=0000-0002-1873-2555]
+\cormark[1]
+\ead{y.zhang@swufe.edu.cn}
+
+\author[3]{Shancheng Jiang}
+\ead{jiangshch3@mail.sysu.edu.cn}
+
+\author[1,4]{Gang Kou~\orcidlink{0000-0002-9220-8647}}[orcid=0000-0002-9220-8647]
+\ead{kougang@swufe.edu.cn}
+
+
+\address[1]{Department of Big Data Management, School of Business Administration, Southwestern University of Finance and Economics, Chengdu 611130, China}
+\address[2]{Big Data Laboratory on Financial Security and Behavior, Southwestern University of Finance and Economics (Laboratory of Philosophy and Social Sciences, Ministry of Education), Chengdu 611130, China}
+\address[3]{School of Intelligent Systems Engineering, Sun Yat-sen University, No. 66, Gongchang Road, Guangming District, Shenzhen, 518107, Guangdong, China}
+\address[4]{Xiangjiang Laboratory, Changsha 410205, China}
+
+
+\cortext[1]{Corresponding author} 
+
+
+
+
+% Title footnote mark
+% eg: \tnotemark[1]
+% \tnotemark[<tnote number>] 
+% \tnotemark[1]
+
+% Title footnote 1.
+% eg: \tnotetext[1]{Title footnote text}
+% \tnotetext[<tnote number>]{<tnote text>} 
+
+
+% Title footnote 1.
+% eg: \tnotetext[1]{Title footnote text}
+% \tnotetext[<tnote number>]{<tnote text>} 
+
+% Here goes the abstract
+
+\begin{abstract}
+Spare parts networks must balance local stock availability against the costs of operating warehouses and serving geographically dispersed equipment. We study joint warehouse selection, inventory deployment, and service region design over a fixed planning horizon, with continuous inventory levels and external supply for residual demand. We formulate a semi-discrete unbalanced optimal transport model using a continuous approximation of expected demand constructed from maintenance records with right censoring through survival estimation and kernel smoothing. For prescribed inventories, a finite-dimensional concave dual translates inventory effects into additive cost adjustments that, together with spatially varying delivery and external supply costs, define generalized additively weighted Voronoi service regions. To overcome the discontinuity inherent in fixed-charge warehouse location within the continuous transport framework, we develop a joint design method using iteratively reweighted $\ell_1$ minimization within a majorization--minimization framework to promote sparse warehouse selection directly through continuous inventory decisions. We exploit the optimality conditions for joint inventory and allocation to derive a direct, exact solution to each weighted convex subproblem, with inventory levels determined by regional demand. This avoids separate allocation optimization for prescribed stocks. Under piecewise-affine costs and piecewise-polynomial densities on polygonal subdivisions, Green's theorem enables exact evaluation of regional demand and costs. For the fixed continuous sparsity surrogate, we establish descent and constrained stationarity of accumulation points of the continued iteration under stated assumptions. Across the tested scales, the method achieves training speedups of 3.5--5.1 times over an adapted stochastic benchmark for joint location, inventory, and allocation using demand scenarios, with mean total costs evaluated out of sample 2.94\%--6.14\% higher. In a European case study of five parts, the selected network reduces annual total cost from EUR~539.4K to EUR~392.1K, saving EUR~147.3K (27.31\%) relative to the company's current policy of keeping all local warehouses open. The case shows how selective warehouse consolidation can retain a geographically distributed supply network while reducing fixed operating costs enough to offset higher transportation and external supply costs.
+\end{abstract}
+
+% Use if graphical abstract is present
+%\begin{graphicalabstract}
+%\includegraphics{}
+%\end{graphicalabstract}
+
+% Keywords
+% Each keyword is seperated by \sep
+
+\begin{keywords}
+Spare parts network design \sep
+Joint location--inventory--allocation \sep
+Continuous approximation \sep
+Semi-discrete unbalanced optimal transport \sep
+Service region design \sep
+Reweighted $\ell_1$ minimization
+\end{keywords}
+
+\maketitle
+
+% Main text
+\section{Introduction}
+
+Our study is motivated by the spare parts operations of a technology company supporting servers at geographically dispersed customer sites. When components such as memory modules, power supply units, or storage drives fail, replacement parts must be delivered from a stocked warehouse to enable on-site repair. Delivery delays can postpone equipment recovery or prolong operation with reduced redundancy. As existing customers expand their installations and new customers deploy servers, the company must also support new equipment entering its service network. Planning this evolving network requires balancing service responsiveness against operating costs. Positioning parts near customers can shorten delivery times, but operating more local warehouses increases fixed costs, while low-turnover parts may remain unused for extended periods. Conversely, consolidating stock at fewer active warehouses or relying on a central warehouse and other external supply sources can reduce local operating costs. These options may, however, lengthen deliveries and increase transportation or external supply costs for some sites \citep{candas2020service,chu2025integrated}. Managers must therefore coordinate warehouse selection, inventory deployment, and service region design before the planning horizon begins.
+
+These decisions must be made before replacement requests over the planning horizon are realized. At existing equipment locations, uncertainty concerns both whether failures will occur and how many replacement parts will be required. Sparse failure histories complicate demand estimation, as does right censoring of component lifetimes when components remain operational at the end of the observation period \citep{vanderauweraer2019forecasting,vanderauweraer2021value}. To plan supply under such uncertainty, discrete location–inventory models typically represent demand at specified customer sites and determine how those sites are supplied \citep{candas2020service,chu2025integrated}. These supply assignments are defined for the customer locations represented in the planning model. However, the selected warehouses and deployed inventory are intended to support operations throughout the planning horizon, during which new installations may introduce additional service locations. These sites also require supply assignments once their coordinates become known. This need motivates a spatial planning approach that defines supply responsibilities across the planning domain in advance. Service regions assign each active warehouse a territory whose expected replacement demand it plans to support. A site's position within the regional partition identifies its planned supplier, including for sites added during the planning horizon. Figure~\ref{fig:service_region_motivation} illustrates this distinction between supply assignments for individual sites and geographical service responsibilities defined over continuous regions. Beyond identifying planned suppliers, regional boundaries determine the expected demand assigned to each warehouse and the associated transportation costs. Warehouse selection and inventory deployment, in turn, influence the service responsibilities that each facility can support. We therefore study service region design jointly with warehouse selection and inventory deployment, using expected demand estimated from the currently observed equipment population. Additional demand from new installations would require an updated assessment of resource needs.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[width=\linewidth]{Figures/spare_parts_combined_scene.pdf}
+  \caption{From individual supply links to geographical service regions. Left: solid arrows show examples of local supply links, while dashed symbols represent potential future demand, including demand at sites added during the planning horizon. Dashed arrows indicate possible supply assignments; two candidate suppliers are shown for the lower demand point. Right: nominal service regions define geographical supply responsibilities for the three warehouses shown, allowing a site's location to identify its planned supplier. The locations of potential future demand and the regional boundaries are illustrative.}
+  \label{fig:service_region_motivation}
+\end{figure}
+
+The first challenge is to characterize service regions that reflect actual delivery costs, inventory deployment, and alternative supply costs, rather than geographical distance alone. For a given network and inventory configuration, including an area in a warehouse's service region changes the demand assigned to that warehouse and limits its capacity to serve other areas. The cost of obtaining external supply also varies across locations. Service regions must therefore reflect the relative economic value of each warehouse as a supply source within the network, so comparisons of unadjusted delivery costs at individual locations may be insufficient to determine an appropriate partition. Existing research has extended geographical partitioning to operational settings involving cost comparisons, workload balancing, and resource constraints, but the resulting partitioning rules depend on how each model represents supply costs and resource conditions. The methodological challenge in our setting is to explain how inventory deployment translates into warehouse-specific additive cost adjustments reflecting the endogenous shadow prices of inventory that expand or contract each warehouse's service region. These adjustments must then be combined with spatial delivery costs and the cost benchmark provided by alternative supply to establish appropriate partitioning rules. Geometrically, these cost comparisons define a class of generalized additively weighted Voronoi service regions \citep{carlsson2026equitable} with endogenous economic weights. The optimality conditions linking these weights, spatial supply assignments, and regional demand must then be established so that the resulting regions are consistent with the deployed inventory.
+
+The second challenge is to translate this service-region structure into a method for jointly optimizing warehouse selection, inventory levels, and spatial supply allocation. Managers must determine which warehouses to operate and how much stock to hold at each while defining their geographical supply responsibilities. The characterization of service regions for a given warehouse set and inventory levels must therefore be extended to support the joint optimization of these decisions. Some related studies have used the scale or geometry of service regions to structure their solution methods, for example by using average service-area approximations to guide location and allocation decisions \citep{mizutani2025spare}, explicitly optimizing regional boundaries \citep{murat2010continuous}, or decomposing the decision space according to regional geometry \citep{averbakh2015structural}. These studies illustrate different ways of incorporating regional information into design optimization. In our setting, inventory levels limit local shipments and are themselves decision variables, while warehouse location decisions involve discrete fixed operating charges. Characterizing service regions for prescribed stocks therefore does not, by itself, yield a tractable procedure for joint design. Treating spatial allocation as a nested subproblem within a combinatorial search over discrete warehouse locations would require repeatedly recomputing continuous regional boundaries and inventory levels, incurring an intractable computational burden. The methodological task is therefore to bridge the computational gap between discrete warehouse location and continuous spatial allocation, exploiting the optimality conditions linking regional demand to inventory levels to establish a tractable framework that coordinates warehouse selection, inventory deployment, and spatial service regions jointly.
+
+To address these two challenges, we use a continuous approximation of expected demand to formulate a semi-discrete unbalanced optimal transport (UOT) model of spatial allocation that captures the economic effects of inventory deployment and alternative supply. Within this framework, we characterize the associated additive cost adjustments and the resulting generalized additively weighted Voronoi-type service regions, and establish optimality conditions among spatial allocations, regional demand, and inventory levels. We then exploit this optimality structure to develop a joint design method for warehouse selection, inventory levels, and spatial supply allocation. The following literature review examines the foundations of this approach and positions the study in relation to existing work.
+
+\subsection{Related Work}\label{sec:literature_review}
+
+Spare-parts service regions depend on inventory availability, supply alternatives, and the spatial distribution of demand. We review integrated spare-parts networks, location--allocation models, and semi-discrete optimal transport to examine how these factors shape geographical service responsibility and the cost of providing it.
+
+\subsubsection{Spare-Parts Network Design}\label{subsec:lit_network}
+
+Spare-parts management links inventory investment to equipment availability and the cost of downtime \citep{hu2018or}. At the network level, these concerns connect with the broader literature on joint location--inventory planning, which examines the coordination of facility and inventory decisions \citep{puttemans2025integration}. Demand pooling is a central source of this dependence: \citet{shen2003joint} jointly select distribution centers and customer allocations while accounting for the inventory consequences of concentrating demand. Related research has extended joint planning to different settings involving facility capacities, correlated demands, stochastic replenishment lead times, and multiple commodities \citep{atamturk2012conic}.
+
+Within service-parts networks, joint design has developed along several operational dimensions. These include coupling warehouse locations with different inventory control policies \citep{tapia2020modelling}, linking facilities and stocks to condition-based replacement decisions \citep{karatas2021joint}, and coordinating location and inventory with the choice between in-house and outsourced last-mile delivery \citep{zhao2024outsourcing}. These extensions show how inventory policies, equipment replacement decisions, and the organization of delivery can alter the network configuration.
+
+Customer service requirements and supply alternatives further shape joint network design. \citet{candas2020service} jointly determine warehouse locations, customer assignments, and base-stock levels to meet customer-specific service-level requirements. For slow-moving retail demand, \citet{chu2025integrated} link advance facility and inventory decisions to subsequent fulfillment from local stocks, a central warehouse, or a third-party provider. These studies connect inventory to service through stock availability and alternative supply, respectively, while defining supply decisions at specified demand locations.
+
+The customers supplied by a warehouse determine both the demand it pools and the delivery distances it incurs. Describing this relationship over a geographical domain brings the extent of service territories into the inventory--transport trade-off. Early spatial location--inventory studies connect demand pooling and regional scale with facility, inventory, and replenishment decisions \citep{erlebacher2000interaction,naseraldin2008integrating}. More recently, \citet{straubert2024continuous} shows how the number of stocking locations and inventory policies jointly influence transport time, backorder delays, and delivery-related costs. In broader delivery networks, territory design accounts for demand frequency and routing requirements \citep{zhen2023territorial} and connects regional boundaries with station workloads \citep{carlsson2026equitable}. These studies establish different ways in which geographical service scope enters network resource and cost decisions.
+
+Continuous approximation (CA) supports such spatial planning by representing inputs or decisions through densities and approximating network costs using local spatial relationships \citep{ansari2018advancements}. Applications include the joint planning of distribution facilities, retailer allocation, and inventory policies under spatially nonuniform inputs \citep{tsao2012continuous}, as well as the coordination of fleet size and delivery zones in same-day delivery \citep{banerjee2022fleet}. These applications connect spatial service scales with inventory or delivery resources through tractable approximations of their operational relationships.
+
+Related spatial design questions also arise in maintenance and spare-parts service networks. \citet{han2020districting} group agricultural production areas into maintenance service regions, trading off service mileage and regional demand overload. \citet{mizutani2025spare} combine equipment failure estimates with a multi-period continuum approximation of average service areas to support spare-parts depot deployment. In this approach, survival-based failure probabilities at known equipment locations are converted into a spatial demand density using Voronoi cells. Their model assumes that parts are always available, so its resource decisions concern facility deployment. Together with the inventory and supply mechanisms reviewed above, these studies motivate examining how finite local stocks and external supply costs shape geographical service responsibilities across heterogeneous expected demand.
+
+\subsubsection{Service-Region Modeling and Spatial Allocation}\label{subsec:lit_regions}
+
+Service-region models determine geographical service responsibility through different decision mechanisms. Models focused on regional scale use approximate relationships among demand, distance, and cost to determine service-area sizes \citep{ansari2018advancements}. To specify geographical assignments, models can directly optimize geographical-unit assignments or boundary coordinates under spatial and operational constraints \citep{erlebacher2000interaction,kalcsics2019districting,murat2010continuous}; alternatively, regions can be induced by geometric allocation rules or optimality conditions \citep{novaes2009continuous,mallozzi2018geometry}. These approaches can be combined: \citet{mizutani2025spare} use approximate service areas to guide a subsequent facility-location and assignment model.
+
+These modeling approaches incorporate geographical and operational requirements into regional design in different ways. Districting models couple contiguity with service-mileage and overload objectives \citep{han2020districting}, or with capacity allocation and external-logistics recourse under stochastic demand \citep{bruni2026districting}. With boundaries as decision variables, \citet{murat2010continuous} jointly optimize facility locations and polygon vertices for a given facility count, assigning all demand and linking regional loads to capacity costs. For rule-induced regions, \citet{mallozzi2018geometry} characterize optimal geometry through pointwise cost comparisons, while \citet{carlsson2026equitable} use additively weighted Voronoi diagrams to coordinate delivery workloads.
+
+Regional assignments determine facility loads, which in turn affect allocation through service costs and resource conditions. \citet{crippa2009queue} capture this feedback through load-dependent waiting costs, distinguishing system-cost minimization from user equilibrium. Loads can also enter facility configuration decisions: \citet{bourne2015centroidal} link assigned quantities to facility locations and number through mass-dependent facility costs, with power diagrams characterizing allocation under squared-distance transport costs. For prescribed sites, \citet{bansil2023storage} instead optimize assigned quantities through a general storage-fee function that can encode hard capacity restrictions. These models assign all demand but differ in how costs and resource conditions determine regional loads.
+
+A regional assignment can be represented as a transport plan linking continuous demand to finitely many facilities. Fixing both marginals and minimizing transport cost over feasible plans yields balanced semi-discrete optimal transport (OT) \citep{peyre2019computational}. If exact demand--resource matching is relaxed, the model must specify how transported and unmatched quantities are determined. Classical partial transport fixes total transported mass and bounds both transported marginals by the available measures \citep{figalli2010partial}; unbalanced formulations instead penalize marginal deviations, allowing transported quantities to respond to transport and discrepancy costs \citep{liero2018optimal}. This trade-off can combine transport costs with total-variation (TV) discrepancy costs \citep{piccoli2014generalized}, and penalties may also vary spatially \citep{sejourne2023unbalanced}. The preprint by \citet{bai2024generalizedpartial} considers spatially varying residual-mass costs together with upper bounds on both marginals. Our unregularized operational allocation problem with prescribed inventories is a semi-discrete instance: demand not supplied locally incurs external-supply cost, and residual stock incurs unused-inventory cost.
+
+For suitable costs and demand measures, semi-discrete optimality conditions characterize weighted spatial partitions \citep{hartmann2020semidiscrete}; in unbalanced allocation, \citet{bourne2018semi} relate generalized Laguerre cells and dual weights to the actual transported density. With constant discrepancy prices and transport costs given by a common increasing function of distance, \citet{chungunbalanced} derive a finite-dimensional dual, clipped service cells, and regional optimality conditions for asymmetric TV penalties, and examine resource masses and locations for a prescribed number of sites. Drawing on this TV-based regional analysis, we examine how prescribed stocks at candidate warehouses, heterogeneous delivery costs, and spatially varying external-supply costs determine service boundaries and the conditions linking regional demand to available inventory, supporting joint network design.
+
+\subsubsection{Joint Optimization Methods for Network Design}\label{subsec:lit_transport}
+
+Discrete location, inventory, and allocation decisions can interact with service-level or response-time constraints and demand uncertainty, increasing computational demands. \citet{candas2020service} use mixed-integer reformulations and Lagrangian relaxation, while \citet{chu2025integrated} combine sample-average approximation with a dual heuristic. The service-region representations in Section~\ref{subsec:lit_regions} connect spatial allocation with regional demand, costs, and resource conditions. Scale-based approaches relate facility counts or service-area sizes to demand and resource requirements \citep{ansari2018advancements}. Under homogeneous demand on a line, \citet{naseraldin2008integrating} parameterize locations and replenishment levels by facility count, reducing the number of independent variables. Related CA approaches retain exact inventory costs \citep{straubert2024continuous} or accommodate road distances through Euclidean embedding \citep{mizutani2025spare}. \citet{banerjee2022fleet} use single-vehicle service-area relationships to estimate fleet size and construct Voronoi delivery zones.
+
+Moving from regional scale to spatial configurations, studies search over region boundaries, geographical-unit groupings, or geometric parameters. \citet{murat2010continuous} use local search over polygonal regions for continuous location--allocation. \citet{yao2022power} combine gradient updates of power-diagram weights with Lloyd-type location updates, determining capacities from regional demand. \citet{regis2023ems} coordinate interdistrict resource allocation and intradistrict location--allocation, revising boundaries through global reassignment feedback. \citet{bruni2026districting} link adaptive large-neighborhood search to stochastic resource and operating evaluations, while \citet{carlsson2026equitable} update additive Voronoi weights using vehicle-routing workload evaluations.
+
+Computing regional demand and costs provides objective and constraint information for design updates. \citet{sommariva2007gauss} use Green's formula for polygonal cubature exact up to a specified polynomial degree; \citet{bourne2015centroidal} and \citet{chungunbalanced} use quadrature and spatial sampling, respectively. Allocation solvers also use regularized scaling for unbalanced transport \citep{chizat2018scaling}, stochastic semi-discrete optimization \citep{taskesen2023semidiscrete}, and entropy-regularized Sinkhorn and augmented-domain linear programming for partial transport \citep{bai2024generalizedpartial}. These computations support allocation optimization and, combined with resource--allocation optimality conditions, can underpin joint solution steps.
+
+Optimality conditions for service-region allocation and related design models link regional demand to facility locations and resource quantities, guiding their coordination. Under squared-distance costs and full demand assignment, the stationarity conditions of \citet{bourne2015centroidal} place facilities at regional centroids and determine power-diagram weights from marginal mass-dependent facility costs, yielding generalized Lloyd updates. For fixed sites and full assignment, \citet{bansil2021generalstorage} uses the matching condition between regional masses and the gradient of the storage-fee conjugate in dual Newton optimization, jointly determining masses and allocation under separable convex fees and appropriate regularity conditions. In unbalanced quantization, \citet{bourne2018semi} characterize optimal masses for given locations by integrating transported density over regions, eliminating mass variables to reduce the joint problem with a prescribed site count to location optimization.
+
+In a closely related unbalanced optimal transport model with total variation penalties on marginal discrepancies, \citet{chungunbalanced} use optimality conditions to recover optimal resource masses for given site locations from demand integrals over service cells, supporting location optimization for a prescribed site count. Candidate warehouse networks additionally require coordinating resource allocation with facility selection and fixed operating costs. Reweighted $\ell_1$ minimization enhances sparsity through iterative penalty-weight updates, allowing sparse selection through tractable continuous optimization subproblems \citep{candes2008enhancing}. \citet{realrojas2026rapid} apply such penalties to station and link capacities in transit networks, using majorization--minimization to coordinate facility selection and capacity provision through successive convex subproblems. Together, these studies suggest using service-region structure to coordinate resource allocation and facility selection; applications to spare-parts networks must also account for local inventory constraints and spatially heterogeneous delivery and external-supply costs.
+
+\subsubsection{Summary}\label{subsec:literature_summary}
+
+To synthesize the preceding review, Table~\ref{tab:lit-review} contrasts representative studies across the three streams in terms of problem formulation, service region modeling, and joint optimization schemes.
+
+\begin{table}[pos=htbp]
+\centering
+\caption{Closely related studies on facility location, resources, and service regions.}
+\label{tab:lit-review}
+\fontsize{8.5}{10.5}\selectfont
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}p{0.08\textwidth}>{\centering\arraybackslash}p{0.145\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.115\textwidth}>{\raggedright\arraybackslash}p{0.145\textwidth}@{}}
+\toprule
+\multirow{2}{=}{\centering\textbf{Study}} & \multicolumn{2}{c}{\textbf{Problem formulation}} & \multicolumn{2}{c}{\textbf{Service-region modeling}} & \multicolumn{2}{c}{\textbf{Joint optimization methods}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+& {\centering\textbf{Decisions}\par} & {\centering\textbf{Continuous approximation}\par} & {\centering\textbf{Formulation}\par} & {\centering\textbf{Region type}\par} & {\centering\textbf{Regional evaluation}\par} & {\centering\textbf{Solution scheme}\par} \\
+\midrule
+\citet{candas2020service} & $L,I,A$ & $\times$ & MILP & Discrete network & --- & Lagrangian relaxation \\
+\addlinespace[3pt]
+\citet{chu2025integrated} & $L,I,A$ & $\times$ & Two-stage stochastic IP & Discrete network & --- & SAA with a dual heuristic \\
+\addlinespace[5pt]
+\citet{naseraldin2008integrating} & $L,I,A$ & $\checkmark$ & NLP & Equal intervals & Analytical & One-dimensional search \\
+\addlinespace[3pt]
+\citet{mizutani2025spare} & $L,A$ & $\checkmark$ & IP & Mean service areas & Analytical & Time-compressed IP \\
+\addlinespace[3pt]
+\citet{murat2010continuous} & $L,I,A$ & $\checkmark$ & NLP & Polygons & Quadrature & Boundary-based local search \\
+\addlinespace[5pt]
+\citet{bourne2015centroidal} & $L,I,A$ & $\checkmark$ & SD-OT & Power cells & Quadrature & Generalized Lloyd algorithm \\
+\addlinespace[3pt]
+\citet{bansil2021generalstorage} & $I,A$ & $\checkmark$ & SD-OT & Laguerre cells & --- & Modified damped Newton method \\
+\addlinespace[3pt]
+\citet{chungunbalanced} & $L,I,A$ & $\checkmark$ & SD-TV-UOT & Generalized Laguerre & Sampling & Gradient descent \\
+\addlinespace[3pt]
+\citet{bourne2018semi} & $L,I,A$ & $\checkmark$ & SD-UOT & Voronoi cells & Quadrature & Generalized Lloyd algorithm \\
+\addlinespace[3pt]
+\citet{realrojas2026rapid} & $L,I,A$ & $\times$ & MINLP & Discrete network & --- & Majorization--minimization \\
+\midrule
+\textbf{This study} & $L,I,A$ & $\checkmark$ & SD-TV-UOT & Generalized additively weighted Voronoi & Analytical & Majorization--minimization \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+\begin{minipage}{\textwidth}
+\fontsize{8}{9.5}\selectfont
+\textit{Notes.} $L$: facility siting, including site selection and coordinate optimization; $I$: inventory, capacity, and other resources; $A$: allocation. SD-OT: semi-discrete optimal transport; SD-UOT: semi-discrete unbalanced optimal transport; SD-TV-UOT: SD-UOT with total-variation marginal penalties; SAA: sample average approximation. Here, continuous approximation denotes continuous spatial demand representation. ---: not applicable or not reported.
+\end{minipage}
+\end{table}
+
+As summarized in Table~\ref{tab:lit-review}, these existing studies offer complementary modeling dimensions for network design, inventory deployment, and spatial allocation. Discrete network models successfully incorporate warehouse opening costs, local stock availability, and external supply alternatives \citep{candas2020service,chu2025integrated}, or promote sparse facility selection through majorization-minimization \citep{realrojas2026rapid}. However, they assign demand only at fixed nodes rather than partitioning a continuous geographical domain. Continuous spatial models instead characterize service areas through interval lengths, mean area approximations, or polygonal boundaries \citep{naseraldin2008integrating,murat2010continuous,mizutani2025spare}, whereas semi-discrete optimal transport and semi-discrete unbalanced optimal transport formulations establish rigorous finite-dimensional duals and weighted geometric cells to link regional demand with facility resources \citep{bourne2018semi,chungunbalanced}. Nevertheless, existing transport formulations typically optimize facility coordinates for a prescribed number of sites without fixed opening costs, and rely on numerical quadrature or spatial sampling to evaluate regional integrals. Consequently, an integrated approach is still needed to jointly optimize candidate warehouse selection, inventory deployment, and continuous service regions under heterogeneous delivery and external supply costs. Addressing this methodological need motivates the work presented next.
+
+\subsection{Contribution}\label{subsec:contribution}
+
+The paper makes three contributions to service region planning for spare parts networks.
+
+\begin{itemize}
+    \item
+    We formulate a semi-discrete unbalanced optimal transport model for spare parts allocation with continuous inventory levels and a continuous approximation of expected failure demand \citep{ansari2018advancements}. This demand representation is constructed from right-censored maintenance records through survival estimation and kernel smoothing. Within this model, we tailor the total variation penalty structure on marginal discrepancies to represent the costs of externally supplied demand and unused inventory. Building on semi-discrete unbalanced optimal transport duality \citep{chungunbalanced}, we further tailor the finite-dimensional concave dual and service region characterization to our operational setting with heterogeneous delivery costs and spatially varying external supply costs. The resulting dual formulation translates the economic effects of prescribed stock into additive cost adjustments for each warehouse. These adjustments induce generalized additively weighted Voronoi service regions \citep{carlsson2026equitable}, explaining how local stock availability and supply alternatives jointly shape geographical service boundaries.
+
+    \item
+    We develop a joint optimization method for candidate warehouse selection, inventory deployment, and spatial service allocation. To overcome the discontinuity inherent in fixed-charge warehouse location within the continuous transport framework, we tailor iteratively reweighted $\ell_1$ minimization within a majorization-minimization framework \citep{realrojas2026rapid} to promote sparse warehouse selection directly through continuous inventory decisions. We exploit the optimality conditions for joint inventory and allocation to derive a direct, exact solution to each weighted convex subproblem, with inventory levels determined by regional demand (Proposition~\ref{prop:exact_design_update}). This property avoids solving a separate allocation subproblem for fixed stocks in each reweighted iteration. Under piecewise-affine costs and piecewise-polynomial demand densities, we establish a polyhedral decomposition of the service regions and apply Green's theorem to evaluate regional demand and costs analytically. For the continuous sparsity surrogate, we prove objective descent and the constrained stationarity of accumulation points under stated assumptions (Theorem~\ref{thm:design_convergence}).
+
+    \item
+    Computational experiments evaluate the accuracy and efficiency of regional calculations and quantify the trade-off between planning time and out-of-sample cost. Across the tested scales, the proposed method achieves training speedups of 3.5--5.1 times relative to an adapted scenario-based stochastic location--inventory--allocation benchmark, with mean out-of-sample total costs 2.94\%--6.14\% higher. In a European five-part case study, the selected design reduces annual total cost by 27.31\% relative to the company's current policy of keeping all local warehouses open. The case illustrates how selective warehouse consolidation can generate operating-cost savings that outweigh the associated increases in transportation and external supply costs.
+\end{itemize}
+
+The remainder of the paper is organized as follows. Section~\ref{sec:section2} presents the problem setting, mathematical formulation, and demand construction. Section~\ref{sec:geometric_properties} establishes the dual service region characterization, polyhedral decomposition, and exact evaluation via Green's theorem. Section~\ref{sec:section4} develops the analytical dual gradients and the reweighted $\ell_1$ network design heuristic. Section~\ref{sec:experiments} reports the numerical experiments and the real-world case study, and Section~\ref{sec:conclusion} concludes.
+
+\section{Problem Description and Mathematical Formulation}\label{sec:section2}
+
+\subsection{Problem Setting, Scope, and Modeling Assumptions}\label{subsec:settiong_assumption}
+
+To formulate the regional planning problem introduced above, we consider a firm supplying replacement parts to geographically dispersed installed equipment. The firm jointly chooses which local warehouses to operate, how much stock to position at each, and the geographical demand each warehouse should support. Demand not assigned to the local network is supplied externally.
+
+We consider a fixed planning horizon $\Delta$, a compact geographical domain $\Omega\subset\mathbb R^2$, and a finite set of candidate warehouse locations $Y=\{y_1,\ldots,y_M\}\subset\Omega$. The domain need not be convex or connected. The formulation below describes one part type; Section~\ref{subsec:sparse_network_design} coordinates part-level inventories through shared warehouse-opening decisions.
+
+Installed-unit locations are known, while replacement requests arise from discrete equipment failures. We use sparse, right-censored maintenance records to forecast these requests under the following assumption.
+
+\begin{assumption}[Single-Event Approximation and Common Survival Law]
+\label{ass:failure_process}
+For the low-turnover parts considered here, each installed unit is assumed to generate at most one relevant failure event over the planning horizon. For a given part type, the survival law depends on component age and is common across locations. Pooling records under this law supports estimation from sparse, right-censored data. Spatial demand can nevertheless vary because the locations and ages of installed units differ across the region.
+\end{assumption}
+
+Under Assumption~\ref{ass:failure_process}, predicted failure probabilities provide expected demand at the installed-unit locations. We use a continuous spatial approximation of this demand to support region-based allocation and integration \citep{murat2010continuous,mizutani2025spare}. The resulting measure $\mu_1$ has density $f(\bm x)$. Integrating this density over a service region gives the corresponding planning estimate of expected demand, while individual failure events remain discrete. The optimization therefore evaluates planning cost on a smoothed approximation of expected demand.
+
+On the supply side, $m_i\ge0$ is a continuous nominal stock allocation at warehouse $i$ for the planning horizon, measured on the same quantity scale as expected demand. Within-horizon replenishment is not represented. In the single-part formulation, warehouse $i$ is selected if and only if $m_i>0$ and incurs a fixed operating cost $F_i>0$. Local service at $\bm x$ incurs a unit transportation cost $c_i(\bm x)=c(\bm x,y_i)$, whereas external supply incurs a given unit cost $a_1(\bm x)$. Any unused inventory at warehouse $i$ incurs a unit holding cost $a_{2,i}\ge0$. The joint design minimizes these costs over warehouse selection, stock allocations, and demand assignments.
+
+Local allocation cannot exceed demand in any geographical area, and each warehouse's total shipment cannot exceed its planned stock. Unassigned demand is supplied externally, while planned stock may remain unused. The continuous demand field and finite warehouse set lead to a semi-discrete transport representation. Allowing these residual quantities, while excluding over-allocation and over-shipment, motivates the unbalanced formulation in Section~\ref{sec:JLIA_modeling}.
+
+Figure~\ref{fig:UOT_framework} summarizes the demand construction, allocation analysis, and network-design heuristic.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[width=0.99\linewidth]{Figures/UOT_framework.pdf}
+  \caption{Structure of UOT-JLIA. Failure estimates provide a continuous approximation of expected demand. The allocation layer evaluates service regions for prescribed inventories, and analytical regional evaluation supplies demand quantities to the reweighted network-design heuristic.}
+  \label{fig:UOT_framework}
+\end{figure}
+
+To specify the spatial costs used in this formulation, we adopt the following two assumptions.
+
+\begin{assumption}[Heterogeneous Polyhedral Transportation Cost]
+\label{ass:transport_cost}
+The unit transportation cost $c:\Omega\times Y\to[0,\infty)$ has the following representation for each candidate warehouse $y_i\in Y$:
+\begin{equation*}
+    c_i(\bm{x}):=c(\bm{x},y_i)=\max_{k\in K_i}\left\{\langle s_{ik},\bm{x}\rangle+\beta_{ik}\right\},
+\end{equation*}
+where the finite set $K_i$ indexes the affine branches of the cost surface. The vector $s_{ik}\in\mathbb R^2$ gives the spatial coefficients of branch $k$, and $\beta_{ik}\in\mathbb R$ is its intercept. Taking their maximum produces a convex piecewise-affine transportation cost. The Manhattan metric is a special case, with four branches corresponding to the sign combinations of the two coordinate differences.
+\end{assumption}
+
+\noindent\begin{minipage}{\linewidth}
+\begin{assumption}[Spatially Heterogeneous Recourse Cost]
+\label{ass:shortage_penalty}
+An exogenous supply channel, such as expedited external supply, is assumed to be available for residual demand. Its prescribed unit recourse cost $a_1:\Omega\to[0,\infty)$ is convex and piecewise affine:
+\begin{equation*}
+    a_1(\bm{x})=\max_{l\in\mathcal L}\left\{\langle h_l,\bm{x}\rangle+\zeta_l\right\},
+\end{equation*}
+where the finite set $\mathcal L$ indexes the affine branches of this cost surface, $h_l\in\mathbb R^2$ gives their spatial coefficients, and $\zeta_l\in\mathbb R$ their intercepts. This representation allows external-supply costs to vary across locations within the specified convex piecewise-affine class.
+\end{assumption}
+\end{minipage}\par\medskip
+
+These finite maximum representations express the monetary costs of local and external supply as continuous piecewise-affine functions. Once their active branches are fixed, the cost comparisons used to construct service regions become affine inequalities. Section~\ref{sec:JLIA_modeling} formulates the joint decisions for a given demand field, and Section~\ref{sec:demand_reconstruction} explains how this field is constructed from maintenance records.
+
+\par\noindent\textbf{Notation.}
+The geographical domain, candidate warehouse set, and planning horizon are denoted by $\Omega$, $Y=\{y_1,\ldots,y_M\}$, and $\Delta$, respectively, with $\bm x$ denoting a demand location. The expected-demand measure $\mu_1$ has density $f$. The vector $m=(m_1,\ldots,m_M)$ contains continuous nominal stock quantities and induces the inventory measure $\mu_2(m)=\sum_{i=1}^M m_i\delta_{y_i}$, where $\delta_{y_i}$ is the unit point mass at warehouse $y_i$. We use $\mathcal M_+(\cdot)$ for finite nonnegative Radon measures. The allocation measure $\eta_i$ records demand assigned to warehouse $i$, with total quantity $\eta_i(\Omega)$. The transport plan $\gamma$ links demand locations to their supplying warehouses; its marginals $\gamma_1$ and $\gamma_2$ describe locally served demand and warehouse shipment quantities, respectively. Unit transportation, external-supply, and unused-inventory costs are $c_i(\bm x)$, $a_1(\bm x)$, and $a_{2,i}$, while $F_i$ is the warehouse-opening cost. For prescribed inventories, $\mathcal V(m)$ denotes the minimum operational cost, excluding warehouse-opening costs. The marginal functionals $\mathcal F_1$ and $\mathcal F_2(\cdot;m)$ combine the respective external-supply and unused-inventory charges with the demand and inventory bounds. In the regional analysis, $w$ denotes warehouse dual weights and $\mathcal G(w)$ the dual objective with $m$ fixed. The function $\xi(\bm x,w)$ is the minimum of the adjusted warehouse costs and the external-supply cost. The regions $\Omega_i(w)$ and $\Omega_\emptyset(w)$ contain locations where warehouse $i$ and external supply attain this minimum; these regions may overlap at ties. The disjoint integration regions selected by a fixed tie rule are $R_i(w)$, $i=0,\ldots,M$, with $R_0(w)$ corresponding to external supply. Section~\ref{subsec:sparse_network_design} uses $p\in\mathcal P$ to index part types and writes their demand measures, densities, and inventory vectors as $\mu_1^p$, $f_p$, and $m^p$.
+
+
+\subsection{The Joint Location-Inventory-Allocation Problem}\label{sec:JLIA_modeling}
+
+Given the continuous demand measure $\mu_1$, the firm jointly chooses the stocked warehouses, their inventory levels, and the allocation of demand between local warehouses and external supply. These decisions balance the fixed cost of maintaining local warehouses against the transportation and external-supply costs associated with their geographical coverage. For the single-part baseline, the decisions are the inventory vector $m$ and the nonnegative allocation measures $\eta_i$, with $\eta_i(\Omega)$ denoting the total demand assigned to warehouse $i$.
+
+The objective evaluates planning cost over the continuous approximation of expected demand constructed in Section~\ref{sec:demand_reconstruction}. Inventory is measured in continuous units on the same quantity scale, providing nominal stocking quantities for regional planning. Facility $i$ is active exactly when $m_i>0$ and incurs the fixed opening cost $F_i>0$. Transportation and external-supply costs follow Assumptions~\ref{ass:transport_cost} and~\ref{ass:shortage_penalty}, respectively, and $a_{2,i}\ge0$ is the unit cost of unused inventory. Writing $\mathbb I(\cdot)$ for the indicator function, the complete joint location--inventory--allocation problem is
+\begin{subequations}\label{eq:jlia-full}
+\allowdisplaybreaks[0]
+\begin{align}
+    \min_{m,\{\eta_i\}_{i=1}^M}\quad
+       &\sum_{i=1}^M F_i\mathbb I(m_i>0)
+        +\sum_{i=1}^M\int_\Omega c_i(\bm x)\,d\eta_i(\bm x)
+        +\int_\Omega a_1(\bm x)\,d\Bigl(\mu_1-\sum_{i=1}^M\eta_i\Bigr)(\bm x)
+        +\sum_{i=1}^M a_{2,i}\bigl(m_i-\eta_i(\Omega)\bigr)
+        \label{eq:jlia-objective}\\
+    \text{s.t.}\quad
+       &\sum_{i=1}^M\eta_i\le\mu_1,
+        \label{eq:jlia-demand}\\
+       &\eta_i(\Omega)\le m_i,\qquad i=1,\ldots,M,
+        \label{eq:jlia-stock}\\
+       &m\in\mathbb R_{\ge0}^M,\qquad
+        \eta_i\in\mathcal M_+(\Omega),\qquad i=1,\ldots,M.
+        \label{eq:jlia-domains}
+\end{align}
+\end{subequations}
+
+The four terms in \eqref{eq:jlia-objective} account for warehouse opening, local transportation, external supply, and unused inventory. Closing a stocked warehouse saves its opening cost but may increase delivery costs or reliance on external supply.
+
+Constraint~\eqref{eq:jlia-demand} bounds the aggregate local allocation by demand in every geographical area. Constraint~\eqref{eq:jlia-stock} limits each warehouse's total shipment to its inventory. Together with \eqref{eq:jlia-domains}, these constraints allow residual demand and unused stock, and link local service to positive inventory at the supplying warehouse. The residual demand is met externally.
+
+To analyze allocation for prescribed inventories, we express the same decisions as a semi-discrete transport plan linking the continuous demand measure to the finite warehouse set, a structure studied for spatial resource allocation by \citet{chungunbalanced}. The plan and its demand and warehouse marginals are
+\begin{equation}\label{eq:jlia-transport-correspondence}
+    \gamma=\sum_{i=1}^M\eta_i\otimes\delta_{y_i},\qquad
+    \gamma_1=\sum_{i=1}^M\eta_i,\qquad
+    \gamma_2=\sum_{i=1}^M\eta_i(\Omega)\,\delta_{y_i}.
+\end{equation}
+Every nonnegative transport plan on the finite warehouse set admits the decomposition in \eqref{eq:jlia-transport-correspondence}.
+
+For a prescribed inventory vector $m\in\mathbb R_{\ge0}^M$, define the operational value and its two marginal functionals jointly as follows. Here, $\rho$ and $\nu$ are finite signed Radon measures on $\Omega$ and $Y$, respectively, and $\nu_i=\nu(\{y_i\})$.
+\begin{subequations}\label{eq:jlia-operational-uot}
+\allowdisplaybreaks[0]
+\begin{align}
+    \mathcal V(m)&:=\min_{\gamma\in\mathcal M_+(\Omega\times Y)}
+    \left\{\int_{\Omega\times Y}c(\bm x,y)\,d\gamma(\bm x,y)+\mathcal F_1(\gamma_1)+\mathcal F_2(\gamma_2;m)\right\},
+    \label{eq:jlia-operational-value}\\
+    \mathcal F_1(\rho)&:=
+    \begin{cases}
+        \displaystyle\int_\Omega a_1(\bm x)\,d(\mu_1-\rho)(\bm x),&0\le\rho\le\mu_1,\\
+        +\infty,&\text{otherwise},
+    \end{cases}
+    \label{eq:jlia-demand-functional}\\
+    \mathcal F_2(\nu;m)&:=
+    \begin{cases}
+        \displaystyle\sum_{i=1}^M a_{2,i}(m_i-\nu_i),&0\le\nu_i\le m_i,\quad i=1,\ldots,M,\\
+        +\infty,&\text{otherwise}.
+    \end{cases}
+    \label{eq:jlia-inventory-functional}
+\end{align}
+\end{subequations}
+
+Under \eqref{eq:jlia-transport-correspondence}, the finite-value conditions in \eqref{eq:jlia-demand-functional}--\eqref{eq:jlia-inventory-functional} are exactly the demand and inventory bounds in \eqref{eq:jlia-demand}--\eqref{eq:jlia-stock}, and the objective in \eqref{eq:jlia-operational-value} equals the last three terms of \eqref{eq:jlia-objective}. On these domains, the residual measures are nonnegative, so the two marginal charges have a weighted total-variation form related to the asymmetric penalties studied by \citet{chungunbalanced}. The resulting operational problem belongs to the generalized unbalanced transport framework \citep{piccoli2014generalized,piccoli2016properties}, with heterogeneous marginal costs and hard bounds excluding over-allocation and over-shipment.
+
+Minimizing the sum of the operational value $\mathcal V(m)$ and warehouse-opening costs over nonnegative inventory vectors recovers Problem~\eqref{eq:jlia-full}.
+
+For any feasible allocation, reducing each inventory $m_i$ to $\eta_i(\Omega)$ preserves feasibility and cannot increase opening or holding costs. Thus, Problem~\eqref{eq:jlia-full} admits an optimal solution in which inventory equals assigned demand at every warehouse. These quantities represent nominal demand loads, and the joint optimal value is independent of the nonnegative holding-cost coefficients. With inventories prescribed, however, unused stock may remain and holding costs can affect $\mathcal V(m)$ in \eqref{eq:jlia-operational-value}. The same stock-reduction argument underlies Proposition~\ref{prop:exact_design_update}. Section~\ref{sec:experiments} evaluates the design under realized failures, with allocations adjusted to each realization.
+
+Section~\ref{sec:geometric_properties} characterizes service regions for prescribed inventories and evaluates their demand and costs. Section~\ref{sec:section4} uses these regional quantities for joint inventory--allocation updates within a heuristic for warehouse selection under fixed opening costs.
+
+\subsection{Continuous Approximation of Expected Spare-Parts Demand}\label{sec:demand_reconstruction}
+
+To provide the demand input for Section~\ref{sec:JLIA_modeling}, we construct a continuous spatial approximation of expected failures over the planning horizon $\Delta$. We first estimate demand at the known installed-unit locations and then smooth this weighted point pattern for regional allocation. Survival analysis supplies the demand weights, while kernel smoothing supplies their continuous spatial representation.
+
+Under Assumption~\ref{ass:failure_process}, records for a given part type share the survival function $S(t)=\mathbb P(T>t)$, where $T$ is component lifetime. Write the observed lifetime records as $\{(Z_n,\delta_n)\}_{n=1}^N$, with $Z_n$ the observed duration and $\delta_n$ the failure indicator. Under non-informative right censoring, we estimate $S$ using the Kaplan--Meier estimator $\widehat S$ \citep{kaplan1958nonparametric}. A prospective forecast uses only information available at the planning start. Let $\mathcal A$ identify the units known to be operating at that date; for these units, $Z_n$ is their current component age and $\bm x_n=(x_{n1},x_{n2})\in\Omega$ is their location.
+
+To estimate demand over the next $\Delta$ time units, condition on survival to the current age. The following construction requires $\widehat S(Z_n)>0$ for every $n\in\mathcal A$. The estimated conditional failure probabilities and their spatial demand measure are
+\begin{subequations}\label{eq:predicted-point-demand}
+\allowdisplaybreaks[0]
+\begin{align}
+    p_n&:=1-\frac{\widehat S(Z_n+\Delta)}{\widehat S(Z_n)},\qquad n\in\mathcal A,\label{eq:conditional-failure-estimate}\\
+    \mu_1^{\mathrm{disc}}&:=\sum_{n\in\mathcal A}p_n\,\delta_{\bm x_n}.\label{eq:discrete-expected-demand}
+\end{align}
+\end{subequations}
+The survival ratio in \eqref{eq:conditional-failure-estimate} estimates the probability of remaining operational throughout the horizon, conditional on current age. With at most one relevant failure and one replacement part per failure, its complement estimates the unit's expected demand. In \eqref{eq:discrete-expected-demand}, $\delta_{\bm x_n}$ is a unit point mass, so the measure retains the known locations and their predicted demand weights. Evaluating \eqref{eq:conditional-failure-estimate} beyond the observed age range requires a separately specified survival extrapolation rule.
+
+To obtain a density for regional allocation, we distribute each point mass over its spatial neighborhood. We use a linear transformation of a bivariate product of triweight kernels. The triweight kernel belongs to the standard symmetric beta family \citep{langrene2019fast}, and its bivariate product has been used in density estimation \citep{li2002structural}. The transformation gives rhombic support and preserves a polynomial expression in its interior. These properties allow the kernel boundaries and local density expressions to enter the regional construction in Section~\ref{subsec:service-region-structure}.
+
+For bandwidth $\sigma>0$, define the normalized kernel and the smoothed demand density by
+\begin{subequations}\label{eq:continuous-demand-construction}
+\allowdisplaybreaks[0]
+\begin{align}
+    K(u,v)&:=\alpha[1-(u+v)^2]^3[1-(u-v)^2]^3\mathbb I(|u|+|v|<1),\label{eq:demand-kernel}\\
+    f(\bm x)&:=\frac{1}{\sigma^2}\sum_{n\in\mathcal A}p_n K\!\left(\frac{x_1-x_{n1}}{\sigma},\frac{x_2-x_{n2}}{\sigma}\right),\qquad \bm x\in\mathbb R^2.\label{eq:smoothed-demand-density}
+\end{align}
+\end{subequations}
+Here, $\alpha$ is the fixed constant satisfying $\int_{\mathbb R^2}K(u,v)\,du\,dv=1$; Appendix~\ref{app:kernel_derivation} derives its value and the product triweight representation. The bandwidth $\sigma$ controls the spatial smoothing scale in the same units as the coordinates. The factor $\sigma^{-2}$ compensates for the change of area, while $p_n$ determines each unit's demand contribution.
+
+The planning measure is $\mu_1(d\bm x)=f(\bm x)\,d\bm x$ on $\Omega$. For any measurable $B\subseteq\Omega$, its mass $\mu_1(B)=\int_B f(\bm x)\,d\bm x$ is the continuous approximation of expected demand in that region. Kernel normalization gives
+\begin{equation}\label{eq:smoothed-demand-mass}
+    \int_{\mathbb R^2}f(\bm x)\,d\bm x=\sum_{n\in\mathcal A}p_n.
+\end{equation}
+Thus, smoothing preserves total demand over the full plane, and $f$ has units of expected parts per unit area. The same identity holds for $\mu_1(\Omega)$ when $\Omega$ contains every translated and scaled kernel support. Otherwise, restricting $f$ to $\Omega$ retains only the kernel mass falling within that domain.
+
+Finally, each kernel has straight support edges and a polynomial interior. Refining the domain along all these edges makes $f$ polynomial of total degree at most twelve on each cell. This is the local structure used in Sections~\ref{subsec:service-region-structure} and~\ref{subsec:gradient-structure} to construct regions and evaluate their demand and costs. Exact regional integration applies to the adopted continuous density; it does not remove the estimation and spatial approximation involved in constructing that density.
+
+
+\section{Geometric Properties of Service Regions}
+\label{sec:geometric_properties}
+
+For prescribed inventories, the operational value $\mathcal V(m)$ is defined by an optimization problem over transport measures. This section derives a finite-dimensional dual representation and develops the regional structure needed to evaluate it. Section~\ref{subsec:dual-semidiscrete} establishes the exact dual, Section~\ref{subsec:service-region-structure} constructs a polyhedral decomposition of the induced service regions, and Section~\ref{subsec:gradient-structure} uses Green's theorem to evaluate regional demand and operational costs.
+
+\subsection{Dual Formulation of the Semi-Discrete Optimal Transport Problem}\label{subsec:dual-semidiscrete}
+
+Fix an inventory vector $m\in\mathbb R_{\ge0}^M$ and consider the operational problem in \eqref{eq:jlia-operational-uot}. We seek a representation of $\mathcal V(m)$ that can be optimized over a finite vector of warehouse weights. The conjugates of $\mathcal F_1$ and $\mathcal F_2(\cdot;m)$ are taken with respect to their measure arguments, with $m$ held fixed.
+
+Introducing a demand potential $\phi\in C(\Omega)$ and warehouse weights $w\in\mathbb R^M$ gives the associated Fenchel dual
+\begin{equation}\label{eq:fenchel-dual}
+\begin{aligned}
+    \sup_{\phi\in C(\Omega),\,w\in\mathbb R^M}\quad
+        &-\mathcal F_1^*(-\phi)-\mathcal F_2^*(-w;m)\\
+    \text{s.t.}\quad
+        &\phi(\bm x)+w_i\le c_i(\bm x),\qquad \bm x\in\Omega,\quad i=1,\ldots,M.
+\end{aligned}
+\end{equation}
+Computing the conjugates over the finite-value domains in \eqref{eq:jlia-demand-functional}--\eqref{eq:jlia-inventory-functional} yields
+\begin{subequations}\label{eq:marginal-conjugates}
+\allowdisplaybreaks[0]
+\begin{align}
+    -\mathcal F_1^*(-\phi)
+        &=\int_\Omega\min\{a_1(\bm x),\phi(\bm x)\}\,d\mu_1(\bm x),
+        \label{eq:demand-conjugate}\\
+    -\mathcal F_2^*(-w;m)
+        &=\sum_{i=1}^M m_i\min\{a_{2,i},w_i\}.
+        \label{eq:inventory-conjugate}
+\end{align}
+\end{subequations}
+The demand contribution is nondecreasing in $\phi$, while each inventory term becomes constant for $w_i\ge a_{2,i}$. These properties allow us to eliminate the continuous potential and then restrict the warehouse weights without changing the dual value.
+
+For fixed $w$, the constraints in \eqref{eq:fenchel-dual} bound $\phi(\bm x)$ above by each adjusted transportation cost $c_i(\bm x)-w_i$. We may therefore choose the largest feasible potential, which is continuous under Assumption~\ref{ass:transport_cost}, and substitute it into the demand contribution:
+\begin{align}
+    \phi(\bm x)&=\min_{1\le i\le M}\{c_i(\bm x)-w_i\},\notag\\
+    \xi(\bm x,w)&:=\min\!\left\{a_1(\bm x),\min_{1\le i\le M}[c_i(\bm x)-w_i]\right\}.
+    \label{eq:dual-integrand}
+\end{align}
+At each location, $\xi$ compares the least adjusted warehouse-service cost with the external-supply option priced at $a_1(\bm x)$. Substituting this choice into \eqref{eq:fenchel-dual} removes the function variable $\phi$, leaving an optimization over the $M$ warehouse weights:
+\begin{equation}\label{eq:dual-unrestricted}
+    \sup_{w\in\mathbb R^M}\left\{\int_\Omega\xi(\bm x,w)\,d\mu_1(\bm x)+\sum_{i=1}^M m_i\min\{a_{2,i},w_i\}\right\}.
+\end{equation}
+In \eqref{eq:dual-unrestricted}, reducing any component $w_i>a_{2,i}$ to $a_{2,i}$ leaves the inventory contribution unchanged and cannot decrease the demand integral. Repeating this operation for all such components permits the restriction $w_i\le a_{2,i}$ without changing the optimal value. The inventory contribution then becomes linear in $w$, giving the following representation.
+
+\begin{theorem}[Dual Representation]\label{thm:dual_representation}
+Under the problem setting of Section~\ref{sec:section2} and Assumptions~\ref{ass:transport_cost}--\ref{ass:shortage_penalty}, for any prescribed inventory vector $m\in\mathbb R_{\ge0}^M$, strong duality holds between the operational problem and the following finite-dimensional dual:
+\begin{subequations}\label{eq:operational-dual}
+\allowdisplaybreaks[0]
+\begin{align}
+    \mathcal V(m)=\max_{w\in\mathbb R^M}\quad
+        &\int_\Omega\min\!\left\{a_1(\bm x),\min_{1\le i\le M}[c_i(\bm x)-w_i]\right\}f(\bm x)\,d\bm x+\sum_{i=1}^M m_iw_i,
+        \label{eq:operational-dual-objective}\\
+    \text{s.t.}\quad
+        &w_i\le a_{2,i},\qquad i=1,\ldots,M.
+        \label{eq:operational-dual-constraints}
+\end{align}
+\end{subequations}
+\end{theorem}
+
+\begin{proof}
+See Appendix~\ref{app:dual_proof}.
+\end{proof}
+
+Write $\mathcal G(w)$ for the objective in \eqref{eq:operational-dual-objective} and $\mathcal W_{\mathrm{adm}}=\{w\in\mathbb R^M:w_i\le a_{2,i},\ i=1,\ldots,M\}$ for its feasible set, with $m$ fixed. The function $\mathcal G$ is concave in $w$, since $\xi(\bm x,w)$ is a pointwise minimum of affine functions of $w$.
+
+Evaluating this finite-dimensional objective still requires integrating $\xi$ over the demand region. Section~\ref{subsec:service-region-structure} identifies the regions on which each warehouse or the external-supply option attains the minimum, providing the geometric structure needed for this integration.
+
+\subsection{Polyhedral Decomposition of Service Regions}\label{subsec:service-region-structure}
+
+To evaluate the spatial term in the dual objective, we construct local integration regions on which the effective cost is affine and the demand density is polynomial. The construction first fixes the local expressions of the costs and density, and then compares the supply options within each resulting cell. We also resolve ties so that regional integration counts each location once.
+
+Fix a feasible weight vector $w\in\mathcal W_{\mathrm{adm}}$. The warehouse-service and external-supply regions associated with \eqref{eq:dual-integrand} are defined jointly by
+\begin{subequations}\label{eq:region-definitions}
+\allowdisplaybreaks[0]
+\begin{align}
+    \Omega_i(w)&:=\{\bm x\in\Omega:c_i(\bm x)-w_i=\xi(\bm x,w)\},\qquad i=1,\ldots,M,\label{eq:warehouse-region}\\
+    \Omega_\emptyset(w)&:=\{\bm x\in\Omega:a_1(\bm x)=\xi(\bm x,w)\}.\label{eq:external-region}
+\end{align}
+\end{subequations}
+Thus, a warehouse attains the minimum where its adjusted cost is no greater than those of all other warehouses and external supply. These weak minimizing regions cover $\Omega$, but they can overlap on sets of positive demand mass when adjusted costs coincide. We retain the weak regions for their closed-set geometry and resolve ties when constructing the integration regions below.
+
+The cost comparisons in \eqref{eq:region-definitions} give the warehouse service regions a generalized additively weighted Voronoi-type structure. Each warehouse is evaluated through $c_i(\bm x)-w_i$, with $w_i$ acting as an additive weight. The formulation allows warehouse-specific costs that need not arise from a common distance metric. Comparison with the spatially varying external-supply cost $a_1(\bm x)$ further restricts each warehouse's region to locations where its adjusted cost is no greater than the external-supply cost. For prescribed inventories, the optimal weights are determined by the dual problem in Section~\ref{subsec:dual-semidiscrete}.
+
+To obtain a polygonal representation, assume for this construction that $\Omega$ admits a finite subdivision into bounded closed convex polygons with pairwise disjoint interiors. The domain itself may be nonconvex or disconnected.
+
+The service regions derived from the adopted polygonal domain and cost functions may require boundary adjustments to accommodate roads, rivers, or administrative restrictions before implementation \citep{carlsson2026equitable}. Any resulting changes in demand assignments require reassessment of regional demand, inventory feasibility, and costs.
+
+The common refinement must account for changes in both the cost expressions and the demand density. We first identify the affine branches that attain the maxima defining the individual costs; comparison of supply options through the minimum in $\xi$ follows afterward. Under Assumptions~\ref{ass:transport_cost}--\ref{ass:shortage_penalty}, write $L_{ik}(\bm x)=\langle s_{ik},\bm x\rangle+\beta_{ik}$ and $A_l(\bm x)=\langle h_l,\bm x\rangle+\zeta_l$ for the affine branches of the transportation and external-supply costs. Their domination regions are
+\begin{subequations}\label{eq:affine-domination}
+\allowdisplaybreaks[0]
+\begin{align}
+    \Lambda_{ik}&:=\{\bm x\in\Omega:L_{ik}(\bm x)\ge L_{ik'}(\bm x)\text{ for all }k'\in K_i\},\\
+    \Lambda_l&:=\{\bm x\in\Omega:A_l(\bm x)\ge A_{l'}(\bm x)\text{ for all }l'\in\mathcal L\}.
+\end{align}
+\end{subequations}
+On $\Lambda_{ik}$, the transportation cost is $c_i=L_{ik}$; on $\Lambda_l$, the external-supply cost is $a_1=A_l$.
+
+To obtain polynomial local integrands, we also refine the domain subdivision by the supporting lines of all rhombic kernel supports from Section~\ref{sec:demand_reconstruction}. Let $\mathcal D$ be the resulting finite collection of closed convex polygons with pairwise disjoint interiors. Combining these polygons with the cost-branch regions gives the common refinement
+\begin{equation}\label{eq:common-refinement}
+    \mathcal T:=\left\{\tau=\left(\bigcap_{i=1}^M\Lambda_{ik_i}\right)\cap\Lambda_l\cap D:\ k_i\in K_i,\ l\in\mathcal L,\ D\in\mathcal D,\ \tau\ne\varnothing\right\}.
+\end{equation}
+On each $\tau\in\mathcal T$, the active indices give $c_i=L_{ik_i}$ and $a_1=A_l$, while the kernel-support refinement makes $f$ polynomial. This subdivision is independent of $w$, and identical intersections are retained only once. However, the minimum of the local affine costs need not be affine throughout $\tau$, because the minimizing option may change within the cell.
+
+To determine where each supply option attains the minimum within a cell, fix $\tau$ and its active indices. The warehouse--warehouse and warehouse--external-supply comparisons become the following affine constraints:
+\begin{subequations}\label{eq:local-comparisons}
+\allowdisplaybreaks[0]
+\begin{align}
+    H_{ij}^{\tau}(w)&:=\{\bm x\in\mathbb R^2:\langle s_{ik_i}-s_{jk_j},\bm x\rangle\le\beta_{jk_j}-\beta_{ik_i}+w_i-w_j\},\label{eq:warehouse-comparison}\\
+    H_{i\emptyset}^{\tau}(w)&:=\{\bm x\in\mathbb R^2:\langle s_{ik_i}-h_l,\bm x\rangle\le\zeta_l-\beta_{ik_i}+w_i\}.\label{eq:external-comparison}
+\end{align}
+\end{subequations}
+Equation~\eqref{eq:warehouse-comparison} retains locations where warehouse $i$ is no more expensive than warehouse $j$; \eqref{eq:external-comparison} compares warehouse $i$ with external supply. Substituting these local comparisons into \eqref{eq:region-definitions} yields
+\begin{subequations}\label{eq:local-regions}
+\allowdisplaybreaks[0]
+\begin{align}
+    \Omega_i(w)\cap\tau&=\tau\cap\left(\bigcap_{j\ne i}H_{ij}^{\tau}(w)\right)\cap H_{i\emptyset}^{\tau}(w),\label{eq:local-warehouse-region}\\
+    \Omega_\emptyset(w)\cap\tau&=\tau\cap\bigcap_{j=1}^M\{\bm x\in\mathbb R^2:A_l(\bm x)\le L_{jk_j}(\bm x)-w_j\}.\label{eq:local-external-region}
+\end{align}
+\end{subequations}
+On the region in \eqref{eq:local-warehouse-region}, $\xi=L_{ik_i}-w_i$; on the region in \eqref{eq:local-external-region}, $\xi=A_l$. These affine comparisons provide a local polygonal representation of the Voronoi-type service regions. Figure~\ref{fig:section3.2} illustrates the cost-branch subdivision and the subsequent service comparisons.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[t]{0.59\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/section3.2_1.pdf}
+    \subcaption{Affine-branch domination regions of transportation costs}
+    \label{fig:section3.2_1}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.39\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/section3.2_2.pdf}
+    \subcaption{Local warehouse-service and external-supply regions}
+    \label{fig:section3.2_2}
+  \end{minipage}
+  \caption{Schematic construction of service regions under an $L_1$ transportation metric. \textbf{(a)} Affine-branch domination regions for the warehouse costs. \textbf{(b)} An elementary cell $\tau$ and the service regions obtained from local affine comparisons. The red segments illustrate warehouse-comparison boundaries; the label $H_{12}(w)$ denotes $H_{12}^{\tau}(w)$ on the relevant cell. The region $\Omega_\emptyset(w)$ is supplied externally.}
+  \label{fig:section3.2}
+\end{figure}
+
+Because the finitely many cells in $\mathcal T$ cover $\Omega$, the local construction yields the following global representation.
+\begin{proposition}[Polyhedral Structure of Service Regions]
+\label{prop:polyhedral_structure}
+Under Assumptions~\ref{ass:transport_cost}--\ref{ass:shortage_penalty}, suppose that $\Omega$ admits the finite convex polygonal subdivision specified above. For any $w\in\mathcal W_{\mathrm{adm}}$ and $\tau\in\mathcal T$, each localized weak region $\Omega_i(w)\cap\tau$ or $\Omega_\emptyset(w)\cap\tau$ is empty or a closed convex polytope, possibly of lower dimension. Each global weak region is a finite union of these polytopes and need not be convex or connected. The effective cost $\xi$ is affine on each nonempty localized region.
+\end{proposition}
+\begin{proof}
+See Appendix~\ref{app:geometry_proof}.
+\end{proof}
+
+For integration, each location must be counted once even when several options minimize cost on a positive-area set. Include external supply as option $0$, with $b_0=a_1$ and $w_0=0$, and write $b_i=c_i$ for warehouses. The fixed order $0<1<\cdots<M$ defines disjoint regions
+\begin{equation}\label{eq:geometric-partition}
+    R_i(w):=\{\bm x\in\Omega:i=\min\arg\min_{0\le j\le M}[b_j(\bm x)-w_j]\},\qquad i=0,\ldots,M.
+\end{equation}
+These regions cover $\Omega$. This selection rule defines integration regions; it does not by itself enforce prescribed inventory constraints. Section~\ref{subsec:sparse_network_design} uses the same order for joint inventory--allocation updates.
+
+On each two-dimensional $\tau$, identically tied affine options are assigned to the first option in this order. The remaining comparisons yield closed polygonal representatives of $R_i(w)\cap\tau$ that differ from these sets only on zero-area boundaries; Appendix~\ref{app:geometry_proof} justifies this construction. Lower-dimensional components contribute zero to the integrals under the absolutely continuous demand measure. Thus, each local integrand is the product of an affine cost and a polynomial density, which is the structure used in Section~\ref{subsec:gradient-structure}.
+
+\subsection{Exact Regional Evaluation via Green's Theorem}\label{subsec:gradient-structure}
+
+Section~\ref{subsec:service-region-structure} provides polygonal integration regions on which the local integrands are polynomial. Building on this structure, we use Green's theorem to evaluate the spatial term of the operational dual objective through integrals along polygon edges. The same procedure yields the regional demand quantities required in Section~\ref{sec:section4}.
+
+Fix a feasible weight vector $w$ and use the integration regions and option-cost notation of Section~\ref{subsec:service-region-structure}. On each cell $\tau\in\mathcal T$, every option cost is affine and the demand density is polynomial of total degree at most twelve. On $R_i(w)\cap\tau$, the selected effective cost is $b_i-w_i$, so the local cost integrand has total degree at most thirteen. The local integrands and the resulting decomposition are
+\begin{subequations}\label{eq:regional-cost-integrals}
+\allowdisplaybreaks[0]
+\begin{align}
+    Q_{i,\tau}(x_1,x_2)&:=f(x_1,x_2)[b_i(\bm x)-w_i],\qquad \bm x\in R_i(w)\cap\tau,\label{eq:local-cost-integrand}\\
+    \int_\Omega\xi(\bm x,w)\,d\mu_1(\bm x)&=\sum_{\tau\in\mathcal T}\sum_{i=0}^M\iint_{R_i(w)\cap\tau}Q_{i,\tau}(x_1,x_2)\,dx_1\,dx_2.\label{eq:regional-integral-decomposition}
+\end{align}
+\end{subequations}
+The regions in \eqref{eq:geometric-partition} count each location once, so \eqref{eq:regional-integral-decomposition} remains valid in the presence of positive-mass ties. For boundary integration, we use the closed polygonal representatives justified in Appendix~\ref{app:geometry_proof}. These have the same integrals as the corresponding local regions; empty or lower-dimensional regions contribute zero.
+
+It therefore suffices to evaluate a polynomial integral over one polygon. Let $R$ be a closed polygonal representative with nonempty interior, and write $Q$ for the corresponding local integrand. We use the uniform degree bound $d_{\max}=13$ for both cost and demand integrals; the demand density has degree at most twelve, so its degree-thirteen coefficients are zero. With coefficients $C_{a,b}\in\mathbb R$, construct a primitive with respect to the first coordinate and orient $\partial R$ counterclockwise. Green's formula then gives the following boundary representation \citep{sommariva2007gauss}:
+\begin{subequations}\label{eq:green-polynomial-integral}
+\allowdisplaybreaks[0]
+\begin{align}
+    Q(x_1,x_2)&=\sum_{a=0}^{d_{\max}}\sum_{b=0}^{d_{\max}-a}C_{a,b}x_1^a x_2^b,\label{eq:local-polynomial-expansion}\\
+    V_1(x_1,x_2)&=\sum_{a=0}^{d_{\max}}\sum_{b=0}^{d_{\max}-a}\frac{C_{a,b}}{a+1}x_1^{a+1}x_2^b,\qquad \frac{\partial V_1}{\partial x_1}=Q,\label{eq:polynomial-primitive}\\
+    \iint_R Q(x_1,x_2)\,dx_1\,dx_2&=\oint_{\partial R}V_1(x_1,x_2)\,dx_2.\label{eq:green-boundary-integral}
+\end{align}
+\end{subequations}
+The derivative in \eqref{eq:polynomial-primitive} recovers the local integrand, which allows its area integral to be evaluated from the primitive along the boundary. The primitive has total degree at most $d_{\max}+1=14$.
+
+To evaluate the boundary integral, let $\mathcal E_R$ contain the counterclockwise-oriented edges of $R$. An edge $e$ runs from $(x_{1A,e},x_{2A,e})$ to $(x_{1B,e},x_{2B,e})$. For $t\in[0,1]$, its affine parameterization, the polynomial restricted to the edge, and the resulting integrals are
+\begin{subequations}\label{eq:edge-polynomial-evaluation}
+\allowdisplaybreaks[0]
+\begin{align}
+    x_{1,e}(t)&=x_{1A,e}+t(x_{1B,e}-x_{1A,e}),\qquad x_{2,e}(t)=x_{2A,e}+t(x_{2B,e}-x_{2A,e}),\notag\\
+    V_1\bigl(x_{1,e}(t),x_{2,e}(t)\bigr)&=\sum_{r=0}^{d_{\max}+1}v_{e,r}t^r,\label{eq:edge-polynomial-restriction}\\
+    \int_e V_1\,dx_2&=(x_{2B,e}-x_{2A,e})\sum_{r=0}^{d_{\max}+1}\frac{v_{e,r}}{r+1},\label{eq:edge-integral-evaluation}\\
+    \iint_R Q(x_1,x_2)\,dx_1\,dx_2&=\sum_{e\in\mathcal E_R}(x_{2B,e}-x_{2A,e})\sum_{r=0}^{d_{\max}+1}\frac{v_{e,r}}{r+1}.\label{eq:polygon-polynomial-evaluation}
+\end{align}
+\end{subequations}
+The coefficients $v_{e,r}$ are determined by substituting the edge parameterization into the polynomial primitive. Here, $dx_2=(x_{2B,e}-x_{2A,e})\,dt$, and the factor $1/(r+1)$ is the integral of $t^r$ over $[0,1]$. Thus, \eqref{eq:polygon-polynomial-evaluation} expresses each local integral as a finite sum determined by the polynomial coefficients and the polygon vertices.
+
+Applying \eqref{eq:polygon-polynomial-evaluation} to the local integrands in \eqref{eq:local-cost-integrand} and summing according to \eqref{eq:regional-integral-decomposition} gives the demand-side term of $\mathcal G(w)$. Adding $\sum_i m_iw_i$ evaluates the full dual objective; the operational value $\mathcal V(m)$ still requires the maximization in \eqref{eq:operational-dual}. Taking $Q$ to be the local density and summing over $\tau$ gives each regional demand mass $\mu_1(R_i(w))$. These masses enter the gradient formula in Section~\ref{subsec:continuous_geometric_flow} under its zero-mass tie condition and the joint inventory updates in Section~\ref{subsec:sparse_network_design}.
+
+These identities are exact for the adopted polynomial density and polygonal regions in exact arithmetic. Floating-point evaluation remains subject to rounding and geometric computation errors. With fixed polynomial degree and precomputed local coefficients, the integration work is proportional to the total number of edges of the local polygons. Region construction and the full iteration cost are addressed in Section~\ref{subsec:sparse_network_design} and Appendix~\ref{app:design_complexity}.
+
+
+\section{Analytical Foundations and Sparse Network Design Heuristics}\label{sec:section4}
+
+This section connects regional allocation analysis with sparse warehouse design. Section~\ref{subsec:continuous_geometric_flow} derives the dual gradients for prescribed inventories. Section~\ref{subsec:sparse_network_design} then introduces iteratively reweighted $\ell_1$ minimization for shared warehouse selection, establishes its majorization--minimization interpretation, and solves each weighted inventory--allocation problem by exact regional integration.
+
+\subsection{Derivation of Analytical Gradients}\label{subsec:continuous_geometric_flow}
+
+For prescribed inventories $m$, we derive the analytical gradient of the operational dual objective $\mathcal G$ in \eqref{eq:operational-dual-objective} and relate it to regional demand allocation. The inventory contribution is linear in the dual weights $w$. Differentiability therefore depends on the minimum defining the effective cost $\xi$ in \eqref{eq:dual-integrand}.
+
+Let $\mathcal N_w$ denote the set of locations where this minimum is attained by at least two options, including external supply. The gradient derivation applies to weights satisfying $\mu_1(\mathcal N_w)=0$. For every $\bm x\in\Omega\setminus\mathcal N_w$, the minimizing option is unique and remains unchanged under a sufficiently small perturbation of $w_i$. Increasing $w_i$ lowers the effective cost at unit rate where warehouse $i$ is selected and leaves it unchanged elsewhere. Thus,
+\[
+    \frac{\partial\xi(\bm x,w)}{\partial w_i}=-\mathbb I_{\Omega_i(w)}(\bm x).
+\]
+Since $\mathcal N_w$ carries no demand mass, integrating this local response and adding the linear inventory contribution gives the following result.
+
+\begin{proposition}[Analytical Gradient and Boundary Optimality Condition]
+\label{prop:analytical_gradient}
+Fix $m\in\mathbb R_{\ge0}^M$. At a feasible weight $w\in\mathcal W_{\mathrm{adm}}$ satisfying $\mu_1(\mathcal N_w)=0$, the reduced objective $\mathcal G$ is differentiable, with
+\begin{equation}\label{eq:analytical-gradient}
+    \frac{\partial\mathcal G(w)}{\partial w_i}=m_i-\mu_1(\Omega_i(w)),\qquad i=1,\ldots,M.
+\end{equation}
+If $w^\star$ is an optimal feasible weight satisfying $\mu_1(\mathcal N_{w^\star})=0$, then, for each warehouse $i$,
+\begin{equation}\label{eq:gradient-boundary-optimality}
+    \begin{cases}
+        m_i-\mu_1(\Omega_i(w^\star))=0, & \text{if }w_i^\star<a_{2,i},\\[4pt]
+        m_i-\mu_1(\Omega_i(w^\star))\ge0, & \text{if }w_i^\star=a_{2,i}.
+    \end{cases}
+\end{equation}
+\end{proposition}
+\begin{proof}
+See Appendix~\ref{app:gradient_proof}.
+\end{proof}
+
+Equation~\eqref{eq:analytical-gradient} measures the difference between prescribed inventory and regional demand. Under the stated condition, the regional mass can be evaluated by the integration procedure in Section~\ref{subsec:gradient-structure}. At an optimal weight, \eqref{eq:gradient-boundary-optimality} implies that inventory equals assigned demand whenever the dual upper bound is inactive. Unused stock can remain only when that bound is active; an active bound does not require positive unused stock. A related expression for the dual gradient is given by \citet[Proposition~3.1]{chungunbalanced}.
+
+With piecewise-affine costs and an absolutely continuous demand measure $\mu_1$, several adjusted options may attain the minimum over a region with positive demand mass. Proposition~\ref{prop:analytical_gradient} gives the analytical gradient under its stated zero-mass condition. For regional integration, the fixed-order rule in \eqref{eq:geometric-partition} assigns each location to one minimizing option, ensuring that each location is counted once. The joint inventory--allocation update in Proposition~\ref{prop:exact_design_update} remains valid with positive-mass ties because inventory is optimized together with allocation and set equal to assigned demand.
+
+
+\subsection{Sparse Network Design via Reweighted $\ell_1$ Minimization}\label{subsec:sparse_network_design}
+
+We now use the regional allocation model to select a shared warehouse network and determine the inventory of each part. Let $\mathcal P$ be the finite, nonempty set of part types, and let $\mathcal I=\{1,\ldots,M\}$ index the candidate warehouses. For each $p\in\mathcal P$, demand is $\mu_1^p$ with density $f_p$, and $\mathcal V_p(m^p)$ is the operational value in Section~\ref{sec:JLIA_modeling} with this demand and inventory vector $m^p$. Transportation costs, costs of external supply, and costs of unused inventory are common to all parts. Their only coupling is warehouse selection; there is no shared storage capacity constraint. Write $\mathbf m=(m^p)_{p\in\mathcal P}$ and $s_i(\mathbf m)=\sum_{p\in\mathcal P}m_i^p$ for total stock at warehouse $i$. The design problem minimizes
+\begin{equation}
+    \mathcal J(\mathbf m):=\sum_{p\in\mathcal P}\mathcal V_p(m^p)
+        +\sum_{i\in\mathcal I}F_i\mathbb I\{s_i(\mathbf m)>0\},\qquad \mathbf m\ge0.
+    \label{eq:design_objective}
+\end{equation}
+The opening charge is paid once whenever a warehouse carries any part. Although each operational value is convex, the discrete selection indicators make warehouse selection discontinuous. Solving a separate design problem for each part would therefore miss the shared nature of the opening cost.
+
+To address this difficulty, we use iteratively reweighted $\ell_1$ minimization to replace the fixed selection charge by a sequence of linear inventory penalties \citep{candes2008enhancing}. At iteration $t\ge1$, let $s_i^{(t-1)}=s_i\bigl(\mathbf m^{(t-1)}\bigr)$ and compute the common warehouse weight
+\begin{equation}
+    \omega_i^{(t)}:=\frac{F_i}{s_i^{(t-1)}+\epsilon},\qquad i\in\mathcal I,
+    \label{eq:design_weights}
+\end{equation}
+where $\epsilon>0$ is fixed during a run. The next problem jointly optimizes inventory and allocation, adding the linear penalty $\sum_i\omega_i^{(t)}s_i(\mathbf m)$ to the operational cost. Since inventories are nonnegative, this is a weighted $\ell_1$ penalty on the inventory entries, with one weight shared by all parts at a warehouse. This allows us to approximate warehouse selection through continuous inventory decisions.
+
+At a given warehouse, a lower preceding total stock raises the next unit penalty, whereas a higher total stock reduces it. Inventory of any part therefore affects the next penalty faced by every part at that warehouse. All weights are computed from the same preceding inventory matrix, and all part inventories are updated before reweighting.
+
+To explain the mathematical basis of this rule, consider the fixed log-sum objective
+\begin{equation}
+    \Phi_\epsilon(\mathbf m):=\sum_{p\in\mathcal P}\mathcal V_p(m^p)
+        +\sum_{i\in\mathcal I}F_i\log\left(1+\frac{s_i(\mathbf m)}{\epsilon}\right).
+    \label{eq:design_logsum}
+\end{equation}
+The penalty is zero at zero stock and has a decreasing marginal cost, whose value at the preceding inventory is exactly \eqref{eq:design_weights}. It provides a continuous sparsity surrogate for the opening charge without reproducing the discrete selection indicator exactly. The economic cost of the returned network is therefore evaluated by \eqref{eq:design_objective}.
+
+Applying the concavity of the logarithm at each preceding warehouse total gives the tangent bound
+\begin{equation}
+    \Phi_\epsilon(\mathbf m)\le\sum_{p\in\mathcal P}\mathcal V_p(m^p)
+       +\sum_{i\in\mathcal I}\left[F_i\log\left(1+\frac{s_i^{(t-1)}}{\epsilon}\right)
+           +\omega_i^{(t)}\bigl(s_i(\mathbf m)-s_i^{(t-1)}\bigr)\right].
+\label{eq:design_majorization}
+\end{equation}
+Equality holds at $\mathbf m=\mathbf m^{(t-1)}$. After dropping terms independent of the new inventory, the right-hand side is the operational cost plus the weighted inventory penalty introduced above. Thus, the reweighted $\ell_1$ update is a majorization--minimization (MM) step for the fixed log-sum objective \eqref{eq:design_logsum} \citep{hunter2004tutorial}, provided that the weighted problem is solved exactly. The MM interpretation explains why each such update cannot increase this objective.
+
+To solve the weighted updates and the final inventory reoptimization in a common form, let $\lambda\ge0$ be a vector of unit penalties and $\mathcal S\subseteq\mathcal I$ the allowed warehouse set. Define
+\begin{subequations}\label{eq:weighted_design_problem}
+\allowdisplaybreaks[0]
+\begin{align}
+    \mathsf G(\lambda,\mathcal S):\quad
+    \min_{\mathbf m,\{\eta_i^p\}}\quad
+       &\sum_{p\in\mathcal P}\left[\sum_{i\in\mathcal S}\int_\Omega c(\bm x,y_i)\,d\eta_i^p(\bm x)
+          +\int_\Omega a_1(\bm x)\,d\!\left(\mu_1^p-\sum_{i\in\mathcal S}\eta_i^p\right)(\bm x)\right]\notag\\
+       &\quad+\sum_{p\in\mathcal P}\sum_{i\in\mathcal S}
+          \Bigl[a_{2,i}\bigl(m_i^p-\eta_i^p(\Omega)\bigr)+\lambda_i m_i^p\Bigr]
+          \label{eq:weighted_design_objective}\\
+    \text{s.t.}\quad
+       &\sum_{i\in\mathcal S}\eta_i^p\le\mu_1^p\quad(p\in\mathcal P),\qquad
+          \eta_i^p(\Omega)\le m_i^p\quad(i\in\mathcal S,\ p\in\mathcal P),
+          \label{eq:weighted_design_constraints}\\
+       &\mathbf m\ge0,\qquad m_i^p=0\quad(i\notin\mathcal S,\ p\in\mathcal P),\qquad
+          \eta_i^p\in\mathcal M_+(\Omega)\quad(i\in\mathcal S,\ p\in\mathcal P).
+          \label{eq:weighted_design_domains}
+\end{align}
+\end{subequations}
+Each reweighted iteration solves $\mathsf G\bigl(\omega^{(t)},\mathcal I\bigr)$. Minimizing over the allocation measures for prescribed inventories recovers the operational values, so this choice of penalties and allowed warehouses gives the convex weighted problem identified by \eqref{eq:design_majorization}. Once the common penalties are fixed, its objective and feasible set separate across parts.
+
+For any fixed allocation, an unused inventory unit costs $a_{2,i}+\lambda_i\ge0$. Consequently, there is an optimal solution with $m_i^p=\eta_i^p(\Omega)$ at every allowed warehouse. The remaining cost of assigning one demand unit to warehouse $i$ is $c(\bm x,y_i)+\lambda_i$. Each unit can therefore be assigned to the least expensive adjusted warehouse or to external supply. Inventory balance follows from joint optimization and preserves the shipment constraints. This argument also covers zero penalties or holding costs and does not require the differentiability condition used in Section~\ref{subsec:continuous_geometric_flow}.
+
+For an allowed warehouse set $\mathcal S$, extend the fixed-order rule in \eqref{eq:geometric-partition} by restricting the available options to $\{0\}\cup\mathcal S$:
+\begin{equation}
+    R_i(w;\mathcal S):=\left\{\bm x\in\Omega:
+        i=\min\arg\min_{j\in\{0\}\cup\mathcal S}[b_j(\bm x)-w_j]\right\},\qquad i=0,\ldots,M.
+    \label{eq:design_partition}
+\end{equation}
+The fixed order $0<1<\cdots<M$ resolves every tie, including ties with positive demand mass. The same order is used for all parts and iterations. The regions are measurable and disjoint, and excluded warehouses have empty regions. Write $R_i(w)=R_i(w;\mathcal I)$ when all candidates are available.
+
+\begin{proposition}[Exact solution of the weighted design problem]
+\label{prop:exact_design_update}
+Suppose each demand measure is finite and nonnegative, the common costs are nonnegative and continuous on compact $\Omega$, and $a_{2,i}\ge0$. For any $\lambda\ge0$ and $\mathcal S\subseteq\mathcal I$, an optimal solution of $\mathsf G(\lambda,\mathcal S)$ assigns $\eta_i^p=\mu_1^p|_{R_i(-\lambda;\mathcal S)}$ for every $p\in\mathcal P$ and $i\in\mathcal S$. Its inventory is $m_i^p=\mu_1^p\bigl(R_i(-\lambda;\mathcal S)\bigr)$ at allowed warehouses and zero outside $\mathcal S$. In particular, the resulting update is
+\begin{subequations}\label{eq:design_update}
+\begin{align}
+    w^{(t)}&=-\omega^{(t)},\label{eq:design_threshold}\\
+    m_i^{p,(t)}&=\mu_1^p\Bigl(R_i\bigl(w^{(t)}\bigr)\Bigr)
+        =\int_{R_i(w^{(t)})}f_p(\bm x)\,d\bm x,
+        \qquad i\in\mathcal I,\ p\in\mathcal P.\label{eq:design_inventory}
+\end{align}
+\end{subequations}
+\end{proposition}
+\begin{proof}
+See Appendix~\ref{app:design_exact_proof}.
+\end{proof}
+
+Exactness here refers to global minimization of the convex weighted subproblem. A separate dual optimization for prescribed inventories is unnecessary because inventory and allocation are optimized together. Only one partition determined by the adjusted costs is needed per iteration, and each demand density is integrated over it using Section~\ref{subsec:gradient-structure}. Different densities change inventory quantities and the portions of the regions where demand is positive, but do not move the comparison boundaries on a common demand support.
+
+To implement reweighted $\ell_1$ minimization, initialize a nonnegative inventory matrix and keep all candidates available, including those with zero current stock. Hold $\epsilon$ fixed during the run. This parameter has the same units as total warehouse inventory, and its scale should reflect meaningful positive warehouse totals \citep[Section~2.3]{candes2008enhancing}: making it arbitrarily small can impose excessive penalties on lightly stocked warehouses and suppress local service. For a relative tolerance $\delta>0$ and an integer limit $T_{\max}\ge1$, stop when
+\begin{equation}
+    \frac{\bigl\lVert\mathbf m^{(t)}-\mathbf m^{(t-1)}\bigr\rVert_F}{\max\Bigl\{1,\bigl\lVert\mathbf m^{(t-1)}\bigr\rVert_F\Bigr\}}
+        \le\delta\quad\text{or}\quad t=T_{\max}.
+    \label{eq:design_stopping}
+\end{equation}
+The Frobenius norm monitors the full inventory matrix, and the denominator uses the chosen inventory unit as its minimum scale. The stopping rule does not certify stationarity.
+
+The terminal inventories still reflect the unit penalties used to select warehouses. To remove their effect on the final stocking decision, let $T$ be the stopping iteration, retain $\mathcal S^{(T)}=\bigl\{i:s_i(\mathbf m^{(T)})>0\bigr\}$, and solve $\mathsf G\bigl(0,\mathcal S^{(T)}\bigr)$. The same proposition gives
+\begin{equation}
+    \hat m_i^p:=\mu_1^p\Bigl(R_i\bigl(0;\mathcal S^{(T)}\bigr)\Bigr),\qquad i\in\mathcal I,\ p\in\mathcal P.
+    \label{eq:design_recovery}
+\end{equation}
+Return the active set $\widehat{\mathcal S}=\bigl\{i:s_i(\hat{\mathbf m})>0\bigr\}$. This step minimizes operational cost on the selected allowed set and drops any warehouse receiving no demand. It does not reoptimize the selection of warehouse subsets under the original objective. The active set is defined by strictly positive total stock. The associated regions $R_i(0;\widehat{\mathcal S})$ specify nominal supply responsibilities throughout $\Omega$, with index $0$ denoting external supply. Algorithm~\ref{alg:sparse_network} summarizes the complete procedure.
+
+\begin{algorithm}[H]
+\caption{Reweighted $\ell_1$ Minimization for Sparse Network Design}
+\label{alg:sparse_network}
+\begin{algorithmic}[1]
+    \REQUIRE Demands $\{\mu_1^p\}_{p\in\mathcal P}$, candidate locations and costs, fixed $\epsilon>0$, tolerance $\delta>0$, and iteration limit $T_{\max}\ge1$.
+    \ENSURE Final inventory $\hat{\mathbf m}$, active warehouses $\widehat{\mathcal S}$, and allocation regions.
+    \STATE Initialize $m_i^{p,(0)}\leftarrow\mu_1^p(\Omega)/M$ for all $i\in\mathcal I$, $p\in\mathcal P$, and set $t\leftarrow0$.
+    \STATE Fix the tie order in \eqref{eq:design_partition}.
+    \REPEAT
+        \STATE $t\leftarrow t+1$; compute $s_i^{(t-1)}=\sum_{p\in\mathcal P}m_i^{p,(t-1)}$ and the weights in \eqref{eq:design_weights}.
+        \STATE Set $w^{(t)}$ by \eqref{eq:design_threshold} and construct the common regions in \eqref{eq:design_partition} with $\mathcal S=\mathcal I$.
+        \STATE Integrate each demand density by \eqref{eq:design_inventory} to update all inventory columns.
+    \UNTIL{the stopping condition \eqref{eq:design_stopping} holds}
+    \STATE Set $T\leftarrow t$ and $\mathcal S^{(T)}\leftarrow\bigl\{i:s_i(\mathbf m^{(T)})>0\bigr\}$.
+    \STATE Construct $R_i\bigl(0;\mathcal S^{(T)}\bigr)$ and compute $\hat{\mathbf m}$ by \eqref{eq:design_recovery}.
+    \STATE \textbf{return} $\hat{\mathbf m}$, $\widehat{\mathcal S}=\bigl\{i:s_i(\hat{\mathbf m})>0\bigr\}$, and $\Bigl\{R_i\bigl(0;\widehat{\mathcal S}\bigr)\Bigr\}_{i=0}^M$.
+\end{algorithmic}
+\end{algorithm}
+
+The following assumption specifies the fixed data and exact updates used for the MM analysis.
+
+\begin{assumption}[Fixed Data and Exact Updates]
+\label{ass:design_convergence}
+The data satisfy the conditions of Proposition~\ref{prop:exact_design_update}, and $F_i>0$ for every candidate warehouse. All demand and cost data, the finite candidate and part sets, and $\epsilon>0$ remain fixed during a run. The initial inventory matrix is finite and nonnegative. Each reweighted iteration uses the exact regional update in \eqref{eq:design_update} with the fixed tie rule in \eqref{eq:design_partition}.
+\end{assumption}
+
+\begin{theorem}[Descent and Cluster-Point Stationarity]
+\label{thm:design_convergence}
+Under Assumption~\ref{ass:design_convergence}, Algorithm~\ref{alg:sparse_network} has the following properties.
+\begin{enumerate}
+    \item[\rm(i)] The surrogate values $\Phi_\epsilon\bigl(\mathbf m^{(t)}\bigr)$ are nonincreasing and converge if the reweighted iteration is continued.
+    \item[\rm(ii)] Continued without the stopping rule, the inventory sequence is bounded, and every accumulation point is a constrained stationary point of the fixed surrogate problem $\min_{\mathbf m\ge0}\Phi_\epsilon(\mathbf m)$. The stationarity condition is given explicitly in \eqref{eq:design_stationarity} in Appendix~\ref{app:design_convergence_proof}.
+    \item[\rm(iii)] At any finite terminal iterate, reoptimization in \eqref{eq:design_recovery} gives $\widehat{\mathcal S}\subseteq\mathcal S^{(T)}$, does not increase the sum of operational costs, and satisfies $\mathcal J(\hat{\mathbf m})\le\mathcal J\bigl(\mathbf m^{(T)}\bigr)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+See Appendix~\ref{app:design_convergence_proof}.
+\end{proof}
+
+The MM guarantees in parts (i)--(ii) concern the fixed log-sum objective in \eqref{eq:design_logsum}, while part (iii) concerns the original economic objective at the final reoptimization step. The original objective need not decrease at every reweighted iteration, and global optimality of the selected warehouse subset is not guaranteed. The stationarity statement applies to accumulation points of the continued iteration; it need not hold for the finitely stopped or reoptimized inventory.
+
+\begin{remark}[Computational Cost]
+Suppose $\Omega$ is a finite union of compact polygons, the common transportation and external-supply costs are piecewise affine, and the demand densities are piecewise polynomial of fixed degree on finite polygonal subdivisions. After preprocessing, let $L$ be the number of cells in a common convex refinement and $B_0$ the sum of their edge counts. If $E_t$ is the sum of the edge counts of all output polygon pieces at iteration $t$, sequential half-plane clipping and Green's-theorem integration give an arithmetic cost per reweighted iteration of
+\begin{equation}\label{eq:design_iteration_complexity}
+    O\!\left(M^2(B_0+LM)+|\mathcal P|(E_t+M)\right).
+\end{equation}
+The common partition is constructed once per iteration and reused for all parts. Appendix~\ref{app:design_complexity} gives the counting argument, including the inventory and stopping-check costs. This bound excludes preprocessing and does not bound the number of iterations needed to reach a prescribed accuracy.
+\end{remark}
+
+
+\section{Numerical Experiments}\label{sec:experiments}
+
+This section assesses the UOT-JLIA framework from two complementary perspectives. Section \ref{subsec:algo-verification} evaluates its computational performance in terms of accuracy, efficiency, and scalability, and Section \ref{subsec:real_world_case} examines its managerial usefulness through a real-world spare-parts network design application. All experiments are implemented in Python~3.11.5 and executed on a Windows~10 workstation with an Intel Core i7-9750H CPU at 2.60\,GHz, 12 logical processors, and 15.84\,GiB RAM. The stochastic discrete JLIA benchmark and the associated out-of-sample recourse evaluations in Experiment~3 are solved with Gurobi~13.0.1 through \texttt{gurobipy}.
+
+\subsection{Algorithmic Performance Verification}\label{subsec:algo-verification}
+
+\subsubsection*{Common Experimental Environment and Shared Settings}
+
+We use the two-part joint design setting of Section~\ref{subsec:sparse_network_design} over an annual horizon. The parts share warehouse-opening charges but have separate demand intensities and inventory balances. Small (S), medium (M), and large (L) instances use $(L,M,N)=(30,16,100)$, $(45,24,250)$, and $(60,32,500)$, respectively, where $\Omega=[0,L]^2$ is measured in kilometers, $M$ is the number of candidate warehouses, and $N$ is the number of installed units. Each scale has 30 instances. Instances sharing a base seed use nested object pools with rescaled coordinates; results are summarized separately by scale.
+
+Equipment and candidate warehouse locations are generated randomly within the region to simulate heterogeneous service environments. Annual demand probabilities are drawn independently across units and parts as $p_n^1\sim U(0.15,0.35)$ and $p_n^2\sim U(0.05,0.25)$. Each density $f_p$ follows the construction in \eqref{eq:smoothed-demand-density}, using the diamond triweight kernel and $\sigma=1$ km. All kernel supports lie inside $\Omega$, giving $Q_p=\int_\Omega f_p(\bm x)\,d\bm x=\sum_n p_n^p$. The code records the full generation procedure and random seeds.
+
+Costs are expressed in cost units (c.u.) and use $\ell_1$ distances $d_i(\bm x)=\|\bm x-y_i\|_1$ and $d_0(\bm x)=\|\bm x-(L/2,L/2)\|_1$. Local supply costs \mbox{$c_i(\bm x)=b_i+\beta_i d_i(\bm x)+\gamma_i[d_i(\bm x)-10]_+$}, with $(b_i,\beta_i,\gamma_i)=(40u_i^b,0.9u_i^\beta,0.9u_i^\gamma)$ and independent $u_i^b,u_i^\beta,u_i^\gamma\sim U(0.9,1.1)$. External supply costs \mbox{$a_1(\bm x)=68+0.9d_0(\bm x)+0.9[d_0(\bm x)-10]_+$}, and unused stock costs $a_{2,i}=16$ per unit. Here, $[z]_+=\max\{z,0\}$. Shared opening charges are uniform integer draws from $\{120,\ldots,180\}$, creating a trade-off between maintaining warehouses and serving demand over longer distances.
+
+Algorithm~\ref{alg:sparse_network} starts from $m_i^{p,(0)}=Q_p/M$, uses fixed $\epsilon=1$ inventory unit, and stops with $\delta=10^{-6}$ or $T_{\max}=200$. The sparsity parameter was selected on separate pilot instances by minimizing final economic cost normalized by the all-external-supply cost. Every run applies final reoptimization in \eqref{eq:design_recovery}; the active set follows the strictly positive total-stock rule in Section~\ref{subsec:sparse_network_design}.
+
+\subsubsection*{Complete Algorithm Performance: Solution Quality, Computation, and Network Formation}\label{exp1}
+
+Experiment~1 first evaluates the complete algorithm's economic quality and solving time, then examines how the warehouse network and inventories evolve. Finally, we use the full iteration paths to assess the influence of spatial sampling on regional updates. The comparison includes analytical SD-TV-UOT, its sampling variants \mbox{SD-TV-UOT-MC($B$)} with $B\in\{10^3,10^4,10^5\}$, and a MILP reference for the same continuous fixed-charge model.
+
+To isolate the integration method, the analytical and MC versions share initialization, reweighting, stopping, and final reoptimization rules. MC samples follow $f_p/Q_p$, with the total budget allocated in proportion to part-level demand and each sample weighted by its represented mass. Each budget has five independent repetitions per instance. Samples remain fixed throughout a run and form nested prefixes across budgets within each repetition. Each MC run updates its own inventories and weights. Across all 90 instances, the comparison contains 1,530 complete planning runs.
+
+To evaluate the selected networks, we hold each returned inventory matrix fixed and reoptimize allocation under the continuous densities using the original economic objective \eqref{eq:design_objective}. This accounts for external supply and unused stock when sampled inventories differ from continuous demand.
+
+To benchmark optimality, the MILP reference integrates demand and costs over a complete cost-ordering subdivision and optimizes warehouse opening and allocation. The stock-reduction argument in Section~\ref{sec:JLIA_modeling} establishes equivalence to the continuous joint design problem. All candidates are retained, and Gurobi uses one thread, a relative MIP-gap target of $10^{-3}$, and a 1,800-second optimization limit. The certified gap bounds the relative cost excess over the continuous-model optimum using the MILP bounds and the common evaluator's intervals. All fixed-stock evaluations met a $10^{-7}$ relative-gap target.
+
+Solving time includes method-specific preprocessing, sampling or model construction, iteration or optimization, final inventory recovery, and regional output. Common input generation, compilation warm-up, disk access, subsequent evaluation, and reporting are excluded; Table~\ref{tab:exp1-quality} specifies the aggregation over repetitions and instances.
+
+\begin{table}[pos=htbp]
+\centering
+\caption{Complete algorithm performance under the original continuous fixed-charge objective.}
+\label{tab:exp1-quality}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llrcr@{}}
+\toprule
+Scale & Method & Mean cost (c.u.) & Certified gap (\%) & Solving time (s) \\
+\midrule
+S & SD-TV-UOT & 2281.12 & [2.83, 2.83] & 0.074 [0.068, 0.083] \\[2pt]
+ & SD-TV-UOT-MC($10^3$) & 2292.94 & [3.36, 3.36] & 0.027 [0.024, 0.030] \\[2pt]
+ & SD-TV-UOT-MC($10^4$) & 2284.16 & [2.96, 2.97] & 0.089 [0.084, 0.095] \\[2pt]
+ & SD-TV-UOT-MC($10^5$) & 2283.88 & [2.95, 2.95] & 0.845 [0.788, 0.894] \\[2pt]
+ & MILP & 2218.47 & 0.0031 & 1.547 [1.439, 1.812] \\[2pt]
+\midrule
+M & SD-TV-UOT & 5357.50 & [1.16, 1.16] & 0.207 [0.190, 0.234] \\[2pt]
+ & SD-TV-UOT-MC($10^3$) & 5390.72 & [1.78, 1.78] & 0.060 [0.044, 0.063] \\[2pt]
+ & SD-TV-UOT-MC($10^4$) & 5364.26 & [1.28, 1.29] & 0.138 [0.119, 0.156] \\[2pt]
+ & SD-TV-UOT-MC($10^5$) & 5358.97 & [1.18, 1.19] & 1.005 [0.888, 1.098] \\[2pt]
+ & MILP & 5296.19 & 0.0014 & 9.401 [8.572, 10.714] \\[2pt]
+\midrule
+L & SD-TV-UOT & 10470.89 & [0.85, 0.85] & 0.351 [0.316, 0.417] \\[2pt]
+ & SD-TV-UOT-MC($10^3$) & 10541.85 & [1.53, 1.54] & 0.089 [0.083, 0.124] \\[2pt]
+ & SD-TV-UOT-MC($10^4$) & 10487.12 & [1.01, 1.01] & 0.177 [0.171, 0.198] \\[2pt]
+ & SD-TV-UOT-MC($10^5$) & 10471.28 & [0.85, 0.86] & 1.125 [1.046, 1.244] \\[2pt]
+ & MILP & 10382.52 & 0.0053 & 43.049 [38.681, 46.206] \\[2pt]
+\bottomrule
+\end{tabular*}
+\par\smallskip
+\begin{minipage}{\linewidth}
+\footnotesize
+\textit{Notes.} Each scale includes 30 instances. In SD-TV-UOT-MC($B$), $B$ is the total spatial sample budget across both parts; each instance has five independent repetitions. Costs and certified-gap endpoints are averaged within instance and then across instances. Certified intervals bound the mean relative optimality gap; MILP rows report the mean actual solver gap. Equal displayed endpoints reflect rounding. Solving time covers the complete solution procedure defined in the text and is reported as median [Q1, Q3]. For MC, repetition medians are computed within instance before cross-instance summaries. All analytical and MC runs met the inventory-change tolerance, and all MILP solves met the MIP-gap target. No run reached its iteration or solver-time limit.
+\end{minipage}
+\end{table}
+
+Table~\ref{tab:exp1-quality} shows that analytical SD-TV-UOT attains mean certified gaps of approximately 2.83\%, 1.16\%, and 0.85\% at S, M, and L, respectively. Its median solving times are 0.074, 0.207, and 0.351 seconds, compared with 1.547, 9.401, and 43.049 seconds for the MILP. Thus, on these instances, the heuristic trades a small average economic loss for shorter computation. The nonzero gaps also distinguish exact regional integration from globally optimal warehouse selection.
+
+The MC results clarify this time--quality trade-off. At $B=10^3$, MC is faster at every scale, but has higher mean costs and certified gaps than the analytical version. Increasing the budget reduces mean costs at all three scales; at $B=10^5$, the large-scale mean is 10,471.28 c.u., close to the analytical value of 10,470.89 c.u. However, median MC solving times then reach 0.845--1.125 seconds. At $B=10^4$, MC remains faster at M and L. Analytical integration therefore provides a favorable balance of economic quality and computation without being the fastest option at every budget.
+
+To explain how the network forms, Figure~\ref{fig:exp1-network} tracks the prespecified medium-scale instance with seed~42. The active count falls from 24 initially to 18 after one iteration, six after two iterations, and five after five iterations. The snapshots at $t=1,3,5$ show the corresponding consolidation of nominal service regions. The five-warehouse set remains unchanged through termination at $T=21$ and final reoptimization. Hence, the active set stabilizes before the inventories meet the stopping tolerance; warehouse counts alone do not describe completion of the inventory adjustment.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[width=\linewidth]{Figures/v2_figure1_cost_and_regions.pdf}
+  \caption{Network formation for the medium-scale instance with seed~42. Panel (a) reports active warehouse counts. Panels (b)--(d) show nominal service regions at $t=1,3,5$, and panel (e) shows final reoptimization (R). Equipment-marker area represents combined demand intensity. Colored regions identify warehouse responsibilities; light gray denotes external supply. Both parts share the nominal regions. R is separate from the reweighted iterations.}
+  \label{fig:exp1-network}
+\end{figure}
+
+Figure~\ref{fig:exp1-inventory-dual}(a)--(c) explains the associated inventory and weight adjustments. The two demand masses are $Q_1=61.35$ and $Q_2=35.92$ units, and the final total inventories equal these respective masses. Although common costs and shared weights give both parts the same nominal service regions, integrating their different densities produces different stock quantities. The common vertical scale in panels (a)--(b) makes this difference visible.
+
+\begin{figure}[pos=tbp]
+  \centering
+  \includegraphics[width=\linewidth]{Figures/v2_figure2_inventory_and_dual.pdf}
+  \caption{Inventory and shared dual-variable evolution, and the influence of spatial sampling. Panels (a)--(c) use the same analytical run as Figure~\ref{fig:exp1-network}, retaining all 24 candidates and consistent colors for the five final warehouses. Inventory panels share a vertical scale and append R; the dual panel covers iterations 1--21. Panel (d) uses 30 instances per scale and five MC repetitions per budget. Boxes show Q1--Q3 of $100D$ in \eqref{eq:experiment_trajectory_deviation}, with median lines, 1.5-IQR whiskers, and every instance shown once as a circle. Hollow diamonds show cross-instance medians of $100V$ in \eqref{eq:experiment_repeat_dispersion}. These are descriptive distributions, not confidence intervals.}
+  \label{fig:exp1-inventory-dual}
+\end{figure}
+
+The shared weights link these stock adjustments to subsequent allocations. By \eqref{eq:design_weights}, a lower preceding warehouse total raises its next unit penalty; the corresponding dual variable becomes more negative by \eqref{eq:design_threshold}. A higher penalty weakens that warehouse's supply-cost advantage and can remove its assigned demand mass. The inventory update then returns zero, while the warehouse remains eligible in later iterations. Panel (c) records this feedback alongside the inventory concentration in panels (a)--(b). Final reoptimization removes the penalties within the terminal allowed set, adjusting inventories and service boundaries while retaining the five warehouses in this instance.
+
+Finally, Figure~\ref{fig:exp1-inventory-dual}(d) examines whether replacing exact integration by spatial sampling changes the complete iteration path. For instance $j$, let $\widetilde Z_{j,a}^{(t)}$ record both part inventories at every candidate warehouse, with one additional row containing each part's total demand minus its summed warehouse stocks. Here, $A$ denotes the analytical run and $(B,r)$ the MC run at budget $B$ and repetition $r$. All paths include $t=0$ and end at the longest observed iteration $H_j$ across the analytical and 15 MC runs. Completed paths are held at their terminal pre-reoptimization states to align this window; final reoptimization is excluded. With $Q_j=Q_{j,1}+Q_{j,2}$ and $\overline Z_{j,B}^{(t)}$ denoting the mean of the five MC paths, define
+\begin{subequations}\label{eq:experiment_trajectory_metrics}
+\begin{align}
+ D_{j,B}&=\frac{1}{Q_j}\left[\frac{1}{5(H_j+1)}\sum_{t=0}^{H_j}\sum_{r=1}^{5}\bigl\|\widetilde Z_{j,B,r}^{(t)}-\widetilde Z_{j,A}^{(t)}\bigr\|_F^2\right]^{1/2},\label{eq:experiment_trajectory_deviation}\\
+ V_{j,B}&=\frac{1}{Q_j}\left[\frac{1}{5(H_j+1)}\sum_{t=0}^{H_j}\sum_{r=1}^{5}\bigl\|\widetilde Z_{j,B,r}^{(t)}-\overline Z_{j,B}^{(t)}\bigr\|_F^2\right]^{1/2}.\label{eq:experiment_repeat_dispersion}
+\end{align}
+\end{subequations}
+The Frobenius norm preserves differences between warehouses and parts that could cancel in total inventory. Averaging squared differences over iterations and repetitions measures the whole path, rather than only its endpoint. Normalization by total demand expresses the reported $100D$ and $100V$ as percentages of demand mass. Specifically, \eqref{eq:experiment_trajectory_deviation} measures fidelity to the analytical path, whereas \eqref{eq:experiment_repeat_dispersion} measures sensitivity to the integration sample. A small $V$ alone need not imply a small $D$, since repetitions can deviate similarly from the reference. These are descriptive path measures, not economic optimality gaps.
+
+As the budget increases from $10^3$ to $10^5$, median $100D$ falls from 7.28\% to 0.37\% at S, from 9.68\% to 0.49\% at M, and from 7.14\% to 0.52\% at L. Across the three scales, median $100V$ falls from 6.31--8.27\% to 0.33--0.47\%. Nevertheless, $D$ is nonmonotone across the budgets in eight instances, and $V$ in six. The aggregate pattern therefore supports improved path fidelity and reduced sample sensitivity at larger budgets, without implying improvement in every instance. Analytical regional integration evaluates demand mass without spatial sampling, so its path has no dependence on an integration sample. Figure~\ref{fig:exp1-inventory-dual}(d) shows the path-level differences associated with using finite MC samples, while Table~\ref{tab:exp1-quality} evaluates their final economic consequences.
+
+\subsubsection*{Multi-scale Comparison with a Stochastic Discrete JLIA Benchmark}\label{subsubsec:benchmark-comparison}
+
+We next examine how the UOT-JLIA framework scales relative to an adapted scenario-based stochastic discrete JLIA benchmark following the two-stage logic of \cite{chu2025integrated}. As discussed in the JLIA literature review, \citeauthor{chu2025integrated} study a slow-moving-demand location-inventory planning problem in which facility-opening and inventory decisions are made in the first stage, while scenario-dependent fulfillment decisions are optimized in the second stage. Their formulation is therefore the closest recent discrete benchmark to our setting. To align it with the spare-parts application, we preserve this hierarchical benchmark logic and use the same candidate facilities and discrete demand support as our test bed, but replace the original waiting-time uncertainty by nodewise Bernoulli failure realizations generated from failure risk of installed equipment. The resulting benchmark adapts the two-stage formulation to equipment failures while retaining scenario-dependent fulfillment. To this end, we construct a nested family of instances from a single master realization of the installed equipment population. The large master instance contains 300 potential demand points and 96 candidate facilities. The small-, medium-, and large-scale cases are then defined by the first $(M, N_{\mathrm{dem}})=(32,100)$, $(64,200)$, and $(96,300)$ candidate facilities and demand nodes, respectively. This nested construction preserves the same underlying geography and risk structure across all three scales while systematically enlarging both the facility decision space and the discrete demand support. At every scale, the two paradigms share the same candidate subset, demand subset, and cost coefficients. The adapted stochastic benchmark is trained on a one-hundred-scenario deterministic equivalent solved by Gurobi~13.0.1, while out-of-sample evaluation for both methods is conducted on an independent set of thirty Bernoulli scenarios generated from the corresponding nodewise failure probabilities.
+
+The computational comparison is reported in Figure \ref{fig:exp3-runtime-oos}(a). Across all three scales, the UOT-JLIA framework remains substantially faster than the stochastic discrete JLIA benchmark. The training runtimes are $21.48$ versus $75.28$ seconds in the small-scale case, $66.86$ versus $238.95$ seconds in the medium-scale case, and $189.78$ versus $959.55$ seconds in the large-scale case, corresponding to speedups of about $3.5\times$, $3.6\times$, and $5.1\times$, respectively. This widening gap is consistent with the distinct computational structures of the two paradigms. The stochastic discrete JLIA benchmark must jointly optimize binary facility locations and scenario-dependent allocation variables as both $M$ and $N_{\mathrm{dem}}$ increase, whereas the UOT-JLIA framework updates the first-stage design through continuous geometric partitioning and exact regional integration, thereby avoiding combinatorial branching during training.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp3_scalability}
+    \centerline{(a)}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp3_oos_gap}
+    \centerline{(b)}
+  \end{minipage}
+  \caption{Multi-scale comparison between the UOT-JLIA framework and the scenario-based two-stage stochastic discrete JLIA benchmark across nested small, medium, and large-scale instances derived from the same base: (a) training runtime comparison, and (b) scenario-wise out-of-sample total cost distributions under independent Bernoulli failure scenarios.}
+  \label{fig:exp3-runtime-oos}
+\end{figure}
+
+Figure \ref{fig:exp3-runtime-oos}(b) reports the corresponding scenario-wise out-of-sample total cost distributions. As expected, the absolute OOS cost level rises for both methods as the scale of installed equipment expands, reflecting the larger aggregate failure risk induced by the larger demand support. The adapted stochastic discrete benchmark retains the lower mean OOS cost at all three scales, but the OOS premium of the UOT-JLIA framework remains modest: $494.61$ versus $467.29$ in the small-scale case, $821.43$ versus $773.92$ in the medium-scale case, and $1081.85$ versus $1050.91$ in the large-scale case, corresponding to relative gaps of $5.85\%$, $6.14\%$, and $2.94\%$, respectively. 
+
+The benchmark distributions are also tighter across scenarios, with standard deviations of $40.69$, $40.54$, and $40.74$ compared with $89.57$, $79.31$, and $84.62$ for the UOT-JLIA framework. This is consistent with the fact that the discrete benchmark explicitly optimizes scenario-dependent second-stage recourse in the spirit of \cite{chu2025integrated}. By contrast, the UOT-JLIA framework is designed to capture the dominant spatial risk structure through a sparse first-stage design rather than to hedge each realized failure scenario explicitly. Consequently, the OOS gap is mainly concentrated in high-variation or adverse realized failure scenarios, under which the more concentrated network may incur a higher recourse burden. This mechanism also explains the broader OOS cost distribution, especially the longer upper tail, for the UOT-JLIA framework in Figure \ref{fig:exp3-runtime-oos}(b). Importantly, the relative OOS deviation does not deteriorate monotonically with scale; after becoming most visible at the medium scale, it narrows again at the large scale, suggesting that the framework continues to capture the dominant spatial structure of the enlarged instances even without explicitly optimizing over scenario trees.
+
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp3_facility_map}
+    \centerline{(a)}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.51\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp3_inventory}
+    \centerline{(b)}
+  \end{minipage}
+  \caption{Representative first-stage design comparison for the medium-scale instance with $(M, N_{\mathrm{dem}})=(64,200)$: (a) facility placement decisions of the UOT-JLIA framework and the stochastic discrete benchmark over the continuous demand landscape and weighted demand nodes, and (b) paired inventory comparison over the union of facilities selected by at least one method (labels A--M), ordered by geographic proximity.}
+  \label{fig:exp3-location-inventory}
+\end{figure}
+
+To provide a concrete structural interpretation, Figure \ref{fig:exp3-location-inventory} visualizes the representative medium-scale instance with $(M, N_{\mathrm{dem}})=(64,200)$. The facility map in panel (a) reveals a clear overlap in facility placement between the two solutions across the central and eastern high-risk clusters, but also a materially different hedging pattern. The UOT-JLIA framework selects $7$ facilities, whereas the stochastic discrete JLIA benchmark retains $11$. Panel (a) indicates five shared facilities together with two UOT-JLIA-only sites and six benchmark-only sites, while panel (b) shows that the UOT-JLIA framework concentrates inventory on a more compact active warehouse network with visibly higher stock at a few dominant warehouses. By contrast, the stochastic benchmark spreads positive inventory over a broader warehouse network by preserving several additional facilities. In other words, the framework exploits stronger spatial aggregation and risk pooling, whereas the stochastic discrete model pays for extra structural redundancy to smooth scenario-level operating costs. Taken together, Figures \ref{fig:exp3-runtime-oos} and \ref{fig:exp3-location-inventory} reveal a clear trade-off: the UOT-JLIA framework delivers a much stronger scalability profile and a sparser, geographically interpretable first-stage design, at the price of a modest average OOS cost premium and greater upper-tail sensitivity under adverse scenarios relative to the scenario-based stochastic benchmark.
+
+
+\subsection{Real-World Case Study: Spare Parts Network Design}\label{subsec:real_world_case}
+
+We now evaluate the UOT-JLIA framework on a real European spare-parts network operated by a China-based multinational technology company. Owing to commercial-data protection requirements, the case study uses only the subset of enterprise records that the firm explicitly authorized for academic disclosure, and all enterprise identifiers are anonymized. The disclosed data cover installed equipment, historical maintenance and failure records, candidate forward-stocking locations (FSLs), warehouse operating charges, and regional transportation tariffs for the EU27 and the United Kingdom. For the disclosed five-part portfolio used in this case study, the earliest installed units date back to January~22,~2015. The publicly disclosed maintenance and failure records considered in the analysis span June~1,~2021 to June~1,~2024, and the planning period is defined as June~1,~2023 to June~1,~2024. The observed ground transportation charges enter the model as piecewise-linear tariffs, and the central distribution center (DC) is located in Amsterdam to supply demand not covered by local warehouses.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[t]{0.6\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_survival_overview.pdf}
+    \subcaption{Kaplan-Meier survival curves for the five disclosed part numbers under right-censored maintenance data.}
+  \end{minipage}
+  \begin{minipage}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_demand_distribution.pdf}
+    \subcaption{Representative continuous geographical demand field for PN 2FAC99D.}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_demand_distribution_grid.pdf}
+    \subcaption{Continuous geographical demand fields for PNs 5AD1C24, 5600438, 2E54049, and 15AEFA9.}
+  \end{minipage}
+    \caption{Experiment~4: survival-based demand characterization for the real-world spare-parts case. Panel (a) reports the PN-specific Kaplan-Meier survival patterns estimated from right-censored cohorts constructed from the publicly disclosed maintenance and failure records over June~1,~2021 to June~1,~2024. Panels (b) and (c) transform the corresponding failure-risk mass for the planning period from June~1,~2023 to June~1,~2024 into continuous geographical demand fields by L1-kernel density reconstruction.}
+
+  \label{fig:exp4-survival+demand}
+\end{figure}
+
+Based on the demand-characterization framework in Section~\ref{sec:demand_reconstruction}, we reconstruct unit-level lifetime cohorts from the installed-base and maintenance histories and retain right-censored observations explicitly in the survival analysis. For the five disclosed part numbers, namely 2FAC99D, 5AD1C24, 5600438, 2E54049, and 15AEFA9, we estimate PN-specific Kaplan-Meier curves and use them to characterize failure risk over the planning period from June~1,~2023 to June~1,~2024. The candidate set contains $93$ in-scope forward warehouses. Figure~\ref{fig:exp4-survival+demand}(a) shows that the five parts exhibit visibly different survival patterns, which supports part-specific forecasting rather than relying on a pooled historical failure ratio. Panels (b) and (c) then convert the corresponding planning-period risk mass into continuous geographical demand fields. These contours reveal a common central-western European demand corridor, but also clear SKU-level differences across Iberia, the British Isles, the Nordic region, and the eastern service frontier. In this sense, the figure links the forecasting layer and the network-design layer: survival analysis converts maintenance records into forward-looking failure-risk mass, and demand-field reconstruction turns that mass into a geographical planning object.
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[c]{0.495\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_static_map.pdf}
+    \subcaption{Representative service-region map for PN 2FAC99D.}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.495\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_service_region.pdf}
+    \subcaption{PN-specific service partitions for 5AD1C24, 5600438, 2E54049, and 15AEFA9.}
+  \end{minipage}
+    \caption{Experiment~4 service-region visualization for the real-world European spare-parts case. The selected warehouse system contains $57$ local warehouses, while uncovered regions are supplied from the central warehouse. Panel (a) shows the representative partition for PN 2FAC99D, and panel (b) reports the remaining four PN-specific partitions under the same selected warehouse system.}
+
+  \label{fig:exp4-service_region}
+\end{figure}
+
+Figure~\ref{fig:exp4-service_region} visualizes how the UOT-JLIA framework translates a shared warehouse system into differentiated SKU-level service geographies. The sparse-design procedure starts from $94$ initially active locations, corresponding to the $93$ candidate forward warehouses together with the central warehouse, and converges to $58$ active locations. Thus, the framework removes $36$ warehouses from the legacy candidate system while preserving broad territorial coverage. Panel (a) shows the partition for PN 2FAC99D. The selected warehouses form a dense central-western European service structure and extend coverage into the British Isles, Iberia, the Nordic region, and Eastern Europe through geographically coherent territories. Panel (b) confirms that the remaining four parts rely on the same warehouse system but do not inherit identical service boundaries. Their territories shift across Western Europe, the North Sea corridor, and the eastern service frontier because the installed-base geography and failure-risk distribution differ by part. This result is managerially important: the firm can commit once to a common warehouse system while still allowing each part to use that system differently.
+
+Appendix Figure~\ref{fig:exp4_hub} provides two additional diagnostics for the selected design. Panel (a) reports the condensation path of the iteratively reweighted sparse-design procedure. Most structural screening occurs very early: the number of active locations drops from $94$ to $58$ by iteration $6$ and then remains unchanged through iteration $40$. This long flat tail is managerially meaningful because it suggests that the final warehouse configuration is stable rather than driven by late-stage numerical pruning. Panel (b) of Appendix Figure~\ref{fig:exp4_hub} reports the corresponding warehouse-level inventory allocation for the five-part portfolio. The aggregate inventory requirement is $1{,}025$ units. The resulting stock profile is clearly concentrated, but not monopolized by a single warehouse or a single country. Instead, inventory is distributed across a relatively small set of geographically advantageous locations in the central-western European corridor, which is consistent with the spatial concentration already visible in Figures~\ref{fig:exp4-survival+demand} and~\ref{fig:exp4-service_region}. This pattern indicates that the framework preserves the main service geography of the enterprise while consolidating redundant local overlap.
+
+The final design also produces a clear audited cost advantage relative to the enterprise's current supply policy, which is operationally conservative and keeps all $93$ forward warehouses active throughout the planning period from June~1,~2023 to June~1,~2024. The annual total cost of the selected network is EUR~392.1K, compared with EUR~539.4K under the firm's current all-open policy. The proposed design therefore saves EUR~147.3K per year, or $27.31\%$. The cost structure is managerially interpretable: the reduction in fixed warehouse operating cost is large enough to offset the moderate increase in transportation and uncovered-region fulfillment cost. In this case, selective consolidation retains geographically distributed service and part-specific allocations while reducing annual operating cost over the same planning period.
+
+\section{Insights and Conclusion}\label{sec:conclusion}
+
+This paper develops a semi-discrete transport formulation for jointly selecting stocked warehouses, inventory levels, and continuous service regions. Equipment-level failure probabilities estimated from right-censored records provide a spatial approximation of expected demand over a fixed planning horizon. Local shipment bounds, external supply costs, and unused-stock costs link inventory deployment to geographical allocation. Under piecewise-affine costs and piecewise-polynomial demand densities, the resulting regions admit a polygonal decomposition with analytical demand and cost integrals. An iteratively reweighted heuristic uses these evaluations to construct facility and inventory decisions.
+
+The computational study provides evidence on two distinct aspects of the approach. For the tested regional integrals, analytical evaluation achieves higher accuracy and lower runtime than the grid and Monte Carlo settings examined. For network design, the reweighted procedure produces concentrated inventory deployments and a stable set of active facilities in the reported iterations. Comparisons with an adapted scenario-based stochastic discrete benchmark show speedups of 3.5--5.1 times and a mean out-of-sample total-cost premium of 2.94\%--6.14\%. The benchmark also has lower cost variability across the evaluation scenarios. These results describe the observed trade-off between planning with an expected-demand field and optimizing scenario-dependent fulfillment.
+
+In the European five-part case study, the selected design reduces annual total cost from EUR~539.4K to EUR~392.1K, saving EUR~147.3K (27.31\%) relative to the current supply policy. The design procedure reduces the initial set of $94$ candidate locations to $58$ active locations, retaining a geographically distributed network. Common warehouse-opening decisions support part-specific inventories and service regions. For this case, the savings from selective consolidation exceed the additional transportation and external supply costs, showing how a shared warehouse network can accommodate differences in installed-base exposure across parts.
+
+Further research could combine the expected-demand spatial formulation with scenario-dependent operational decisions to coordinate regional design and responses to realized failures. Shared storage-capacity constraints and part-priority rules would introduce additional interactions across parts in the portfolio model. A multi-period formulation could also update failure predictions, stocks, and service regions as maintenance information and inventory states change. These extensions would address additional sources of uncertainty and resource dependence in spare-parts service.
+
+\bibliographystyle{cas-model2-names}
+
+% Loading bibliography database
+\bibliography{cas-refs}
+
+
+% 强制换页
+\newpage
+
+
+\appendix
+\section{Supplementary Real-World Case Study Figures}
+\label{app:real_world_figures}
+
+\begin{figure}[pos=htbp]
+  \centering
+  \begin{minipage}[c]{0.499\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/spare_parts_network_condensation.pdf}
+    \subcaption{Sparsity convergence under the sparse design heuristic.}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.499\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/exp4_hub_finance.pdf}
+    \subcaption{Stacked inventory allocation across the selected warehouses and the five-part portfolio.}
+  \end{minipage}
+  \caption{Supplementary Experiment 4 diagnostics for the real-world European spare-parts case. Panel (a) shows the rapid contraction from the initial dense candidate system to the stable final network structure. Panel (b) reports the corresponding warehouse inventory allocation, stacked by part number, and highlights the concentration of stock in a limited but geographically diversified warehouse network.}
+  \label{fig:exp4_hub}
+\end{figure}
+
+\section{Product Triweight Representation and Normalization}
+\label{app:kernel_derivation}
+
+This appendix expresses the kernel in \eqref{eq:demand-kernel} as a linear transformation of a product of triweight kernels and derives its normalizing constant. We start with the standard one-dimensional triweight kernel used by \citet{li2002structural}:
+\[
+    k(z)=\frac{35}{32}(1-z^2)^3\mathbb I(|z|<1),\qquad \int_{\mathbb R}k(z)\,dz=1.
+\]
+
+To obtain the rhombic support, set $s=u+v$ and $t=u-v$. Since $\max\{|s|,|t|\}=|u|+|v|$, the product $k(s)k(t)$ is positive exactly when $|u|+|v|<1$. The transformation has absolute Jacobian determinant $2$, so the corresponding kernel is
+\begin{equation}\label{eq:app-product-triweight}
+    K(u,v)=2k(u+v)k(u-v).
+\end{equation}
+
+To verify the normalization, use $du\,dv=\tfrac12\,ds\,dt$. The change of variables gives unit mass, and substituting the definition of $k$ determines the coefficient in \eqref{eq:demand-kernel}:
+\begin{subequations}\label{eq:app-kernel-normalization}
+\allowdisplaybreaks[0]
+\begin{align}
+    \int_{\mathbb R^2}K(u,v)\,du\,dv&=\int_{\mathbb R^2}k(s)k(t)\,ds\,dt=1,\label{eq:app-kernel-unit-mass}\\
+    \alpha&=2\left(\frac{35}{32}\right)^2=\frac{1225}{512}.\label{eq:app-kernel-constant}
+\end{align}
+\end{subequations}
+
+The construction yields a nonnegative kernel. Each transformed factor has polynomial degree six, giving total degree twelve inside the rhombic support. Translation and bandwidth scaling preserve this degree. Refining the spatial domain along the kernel-support boundaries therefore makes the weighted demand density polynomial on each cell, providing the local structure used in Sections~\ref{subsec:service-region-structure} and~\ref{subsec:gradient-structure}.
+
+
+\section{Proof of Theorem~\ref{thm:dual_representation}}
+\label{app:dual_proof}
+
+We prove the dual representation for fixed $m\in\mathbb R_{\ge0}^M$ using the Fenchel--Rockafellar framework. Let $E=C(\Omega\times Y)$, equipped with the supremum norm. Its topological dual is $E^*=\mathcal M(\Omega\times Y)$, the space of finite signed Radon measures, paired with $E$ by integration. All measure spaces below carry the weak* topology induced by their continuous-function spaces.
+
+Define the transportation functional by
+\begin{equation}\label{eq:app-transport-functional}
+    \Theta(\gamma)=
+    \begin{cases}
+        \displaystyle\int_{\Omega\times Y}c(\bm x,y)\,d\gamma(\bm x,y),&\gamma\in\mathcal M_+(\Omega\times Y),\\
+        +\infty,&\text{otherwise}.
+    \end{cases}
+\end{equation}
+Under Assumptions~\ref{ass:transport_cost}--\ref{ass:shortage_penalty}, $c$ and $a_1$ are continuous and bounded on their compact domains. Hence $\Theta$ is proper, convex, and weak* lower semicontinuous. The marginal operator $A:\mathcal M(\Omega\times Y)\to\mathcal M(\Omega)\times\mathcal M(Y)$ and its adjoint under the measure--function pairings satisfy
+\[
+    A\gamma=(\gamma_1,\gamma_2),\qquad A^*(\phi,w)(\bm x,y_i)=\phi(\bm x)+w_i.
+\]
+The marginal functional and the operational problem are
+\begin{subequations}\label{eq:app-primal-structure}
+\allowdisplaybreaks[0]
+\begin{align}
+    \Xi(\rho,\nu;m)&:=\mathcal F_1(\rho)+\mathcal F_2(\nu;m),
+        \label{eq:app-marginal-functional}\\
+    \mathcal V(m)&=\inf_{\gamma\in\mathcal M(\Omega\times Y)}\{\Theta(\gamma)+\Xi(A\gamma;m)\}.
+        \label{eq:app-operational-primal}
+\end{align}
+\end{subequations}
+The finite-value domains of $\mathcal F_1$ and $\mathcal F_2(\cdot;m)$ are the weak* compact order interval $[0,\mu_1]$ and the finite-dimensional box $\prod_i[0,m_i]$. Their costs are continuous on these domains. Thus $\Xi(\cdot,\cdot;m)$ is also proper, convex, and weak* lower semicontinuous, and both $\Theta$ and $\Xi$ equal their biconjugates under the stated pairings.
+
+Using the same signs for the potentials as in \eqref{eq:fenchel-dual}, the associated Fenchel dual is
+\begin{equation}\label{eq:app-fenchel-dual}
+    \sup_{(\phi,w)\in C(\Omega)\times\mathbb R^M}\{-\Theta^*(A^*(\phi,w))-\Xi^*(-\phi,-w;m)\}.
+\end{equation}
+The constraint qualification establishing equality of the primal and dual values is verified below.
+
+The transportation conjugate is
+\begin{equation}\label{eq:app-transport-conjugate}
+    \Theta^*(A^*(\phi,w))=\sup_{\gamma\ge0}\int_{\Omega\times Y}[\phi(\bm x)+w_i-c(\bm x,y_i)]\,d\gamma(\bm x,y_i).
+\end{equation}
+If $\phi(\bm x)+w_i\le c_i(\bm x)$ for all $\bm x$ and $i$, the integrand is nonpositive and $\gamma=0$ attains zero. Otherwise, scaling a Dirac mass at a violating point makes the supremum infinite. Thus $-\Theta^*(A^*(\phi,w))$ equals zero for feasible potentials and $-\infty$ otherwise.
+
+The marginal conjugate separates as
+\[
+    \Xi^*(-\phi,-w;m)=\mathcal F_1^*(-\phi)+\mathcal F_2^*(-w;m).
+\]
+To evaluate the demand term, write $t_+=\max\{t,0\}$ and observe that
+\[
+    \sup_{0\le\rho\le\mu_1}\int_\Omega(a_1-\phi)\,d\rho=\int_\Omega(a_1-\phi)_+\,d\mu_1.
+\]
+The demand supremum is attained by restricting $\mu_1$ to $\{a_1>\phi\}$, while the inventory supremum separates over the intervals $[0,m_i]$. Applying the conjugate definition to \eqref{eq:jlia-demand-functional}--\eqref{eq:jlia-inventory-functional} therefore gives
+\begin{align*}
+    \mathcal F_1^*(-\phi)&=-\int_\Omega a_1\,d\mu_1+\int_\Omega(a_1-\phi)_+\,d\mu_1,\\
+    \mathcal F_2^*(-w;m)&=-\sum_{i=1}^M a_{2,i}m_i+\sum_{i=1}^M m_i(a_{2,i}-w_i)_+.
+\end{align*}
+The identity $a-(a-b)_+=\min\{a,b\}$ yields \eqref{eq:marginal-conjugates}. Substituting the transportation and marginal conjugates into \eqref{eq:app-fenchel-dual} recovers \eqref{eq:fenchel-dual}.
+
+The primal constraints $\gamma\ge0$, $\gamma_1\le\mu_1$, and $\gamma_2\le\mu_2(m)$ define a weak* closed set containing $\gamma=0$, with total mass bounded by $\mu_1(\Omega)$. This set is weak* compact by the Banach--Alaoglu theorem, so the proper lower semicontinuous objective attains its minimum.
+
+To establish zero duality gap, we verify the Fenchel--Rockafellar continuity condition on the continuous-potential side of \eqref{eq:app-fenchel-dual}. Equip $C(\Omega)\times\mathbb R^M$ with the product supremum norm; $A^*$ is then a bounded linear map into $E$. The function $(\phi,w)\mapsto\Xi^*(-\phi,-w;m)$ is finite everywhere because the marginal domains are bounded. Take $\phi\equiv-1$ and $w=0$. Since $c_i\ge0$, the function $A^*(\phi,w)\equiv-1$ lies strictly below $c$. Every function in its supremum-norm ball of radius $1/2$ also lies below $c$, so $\Theta^*$ is identically zero on that ball and is continuous there.
+
+The Fenchel--Rockafellar theorem thus applies to the infimum of $\Xi^*(-\phi,-w;m)+\Theta^*(A^*(\phi,w))$. Using the biconjugate identities, its dual is $\max_\gamma\{-\Theta(\gamma)-\Xi(A\gamma;m)\}$, whose value is $-\mathcal V(m)$ by \eqref{eq:app-operational-primal}. Consequently,
+\begin{equation}\label{eq:app-fenchel-value}
+    \inf_{\phi\in C(\Omega),\,w\in\mathbb R^M}\{\Xi^*(-\phi,-w;m)+\Theta^*(A^*(\phi,w))\}=-\mathcal V(m).
+\end{equation}
+Negating this equality proves that \eqref{eq:fenchel-dual} and the operational problem have the same value. The continuity condition does not require strictly positive inventories.
+
+The reductions in Section~\ref{subsec:dual-semidiscrete} preserve this value. To justify the maximum in \eqref{eq:operational-dual}, increase any component $w_i<-\|a_1\|_\infty$ to $-\|a_1\|_\infty$. Since $c_i\ge0$, its adjusted transport cost remains at least $a_1$, so $\xi$ is unchanged. This change cannot decrease $\sum_i m_iw_i$ because $m_i\ge0$ and preserves the upper bound because $a_{2,i}\ge0$. Maximization may therefore be restricted to the compact box $\prod_{i=1}^M[-\|a_1\|_\infty,a_{2,i}]$, where the continuous objective $\mathcal G$ attains its maximum. This completes the proof of Theorem~\ref{thm:dual_representation}.
+
+\section{Proof of the Polyhedral Structure (Proposition~\ref{prop:polyhedral_structure})}
+\label{app:geometry_proof}
+
+Each $D\in\mathcal D$ is a bounded closed convex polygon obtained by refining the assumed finite polygonal subdivision of $\Omega$ along the kernel-support lines. The domination conditions in \eqref{eq:affine-domination} are finite affine inequalities. Each such constraint defines a closed half-space, the whole plane, or the empty set; the latter two possibilities occur when its linear part vanishes. Thus, every nonempty intersection $\tau$ in \eqref{eq:common-refinement} is a bounded closed convex polyhedron, hence a convex polytope, possibly of dimension less than two. The collection $\mathcal T$ is finite because all index sets and $\mathcal D$ are finite.
+
+Fix $\tau\in\mathcal T$ and one associated choice of active indices $k_i$ and $l$. The domination conditions give $c_i=L_{ik_i}$ and $a_1=A_l$ throughout $\tau$. The comparisons in \eqref{eq:local-comparisons} are therefore equivalent on $\tau$ to the cost comparisons defining the weak minimizing regions. By \eqref{eq:local-regions}, each localized region is obtained by intersecting $\tau$ with finitely many closed affine constraints. Every nonempty result is consequently a bounded closed convex polytope. On $\Omega_i(w)\cap\tau$, the minimum defining $\xi$ equals $L_{ik_i}-w_i$; on $\Omega_\emptyset(w)\cap\tau$, it equals $A_l$. This proves the claimed local affine representations, including at points where several options attain the minimum.
+
+Every point of $\Omega$ belongs to some $D\in\mathcal D$, and each finite family of affine functions attains its maximum at that point. Selecting maximizing indices therefore places the point in at least one $\tau\in\mathcal T$. Hence $\mathcal T$ covers $\Omega$, and
+\[
+    \Omega_i(w)=\bigcup_{\tau\in\mathcal T}\bigl(\Omega_i(w)\cap\tau\bigr),\qquad \Omega_\emptyset(w)=\bigcup_{\tau\in\mathcal T}\bigl(\Omega_\emptyset(w)\cap\tau\bigr).
+\]
+These are finite unions of the local polytopes established above, completing the proof.
+
+For the integration rule in \eqref{eq:geometric-partition}, consider a two-dimensional cell $\tau$. Among options whose local adjusted affine costs coincide identically, retain only the first in the fixed ordering $0<1<\cdots<M$ and assign the others an empty local integration region. For each retained option, use its weak minimizing region intersected with $\tau$ as a closed polygonal representative. Distinct remaining affine costs can coincide only on a line or nowhere, so this representative differs from $R_i(w)\cap\tau$ only on a finite union of line segments.
+
+Distinct two-dimensional cells of $\mathcal T$ also have disjoint interiors: a positive-area overlap would require identical active affine expressions for every cost and the same base polygon, producing the same cell, which is retained only once. All remaining cell overlaps and lower-dimensional cells have zero area. Absolute continuity of $\mu_1$ therefore permits integration over these closed representatives without changing the integrals or counting positive demand mass more than once.
+
+\section{Proof of Proposition~\ref{prop:analytical_gradient}}
+\label{app:gradient_proof}
+
+Fix $w\in\mathcal W_{\mathrm{adm}}$ with $\mu_1(\mathcal N_w)=0$ and regard the reduced expression for $\mathcal G$ as a finite concave function on $\mathbb R^M$. For the $i$th coordinate vector $e_i$, the minimum defining $\xi$ is $1$-Lipschitz in $w_i$, so
+\[
+    \left|\frac{\xi(\bm x,w+t e_i)-\xi(\bm x,w)}{t}\right|\le1,\qquad t\ne0.
+\]
+Outside $\mathcal N_w$, the unique minimizing option persists for sufficiently small $|t|$, and the difference quotient converges to $-\mathbb I_{\Omega_i(w)}(\bm x)$. Since $\mu_1(\Omega)<\infty$, the bound is integrable. Dominated convergence therefore yields
+\[
+    \frac{\partial\mathcal G(w)}{\partial w_i}=m_i+\int_\Omega\frac{\partial\xi(\bm x,w)}{\partial w_i}\,d\mu_1(\bm x)=m_i-\mu_1(\Omega_i(w)).
+\]
+For a finite concave function on $\mathbb R^M$, existence of all coordinate derivatives implies differentiability at $w$. This proves \eqref{eq:analytical-gradient}.
+
+Now let $w^\star$ be an optimal feasible weight satisfying the same zero-mass condition. Its first-order condition is
+\[
+    \nabla\mathcal G(w^\star)^\top(v-w^\star)\le0,\qquad v\in\mathcal W_{\mathrm{adm}}.
+\]
+If $w_i^\star<a_{2,i}$, both coordinate directions are locally feasible, so the $i$th gradient component is zero. If $w_i^\star=a_{2,i}$, the negative direction is feasible, so this component is nonnegative. Substituting \eqref{eq:analytical-gradient} gives \eqref{eq:gradient-boundary-optimality}.
+
+
+\section{Exact Weighted Optimization, Descent, and Computational Cost}\label{app:design_proofs}
+
+Appendix~\ref{app:design_exact_proof} proves that the regional update exactly solves the weighted design problem. Using this result, Appendix~\ref{app:design_convergence_proof} establishes surrogate descent and stationarity of accumulation points, then compares the original economic objective before and after final reoptimization. Appendix~\ref{app:design_complexity} derives the computational cost of one reweighted iteration.
+
+\subsection{Proof of Proposition~\ref{prop:exact_design_update}}\label{app:design_exact_proof}
+
+We first eliminate unused inventory from $\mathsf G(\lambda,\mathcal S)$, then derive a lower bound on allocation cost and construct a feasible solution that attains it.
+\begin{proof}
+For any feasible solution of $\mathsf G(\lambda,\mathcal S)$, write $r_i^p=\eta_i^p(\Omega)$ for the demand assigned to warehouse $i$. The objective in \eqref{eq:weighted_design_objective} can be expressed as
+\[
+    \sum_{p\in\mathcal P}\left[\sum_{i\in\mathcal S}\int_\Omega[c(\bm x,y_i)+\lambda_i]\,d\eta_i^p(\bm x)+\int_\Omega a_1(\bm x)\,d\!\left(\mu_1^p-\sum_{i\in\mathcal S}\eta_i^p\right)(\bm x)+\sum_{i\in\mathcal S}(a_{2,i}+\lambda_i)(m_i^p-r_i^p)\right].
+\]
+The first two terms account for warehouse service, including its unit penalty, and external supply. The last term is the cost of unused inventory, including the same unit penalty. The constraints give $m_i^p\ge r_i^p$, and $a_{2,i}+\lambda_i\ge0$. Replacing $m_i^p$ by $r_i^p$ therefore preserves feasibility and cannot increase the objective, including when the coefficient is zero. It thus suffices to consider inventories equal to assigned demand.
+
+After this reduction, it remains to determine how demand is assigned. For each $p\in\mathcal P$, the allocation measures and residual demand are dominated by $\mu_1^p$. Their Radon--Nikodym densities represent the shares assigned to each warehouse and to external supply. These shares are nonnegative and sum to one $\mu_1^p$-almost everywhere. The unit cost is therefore a convex combination of the available unit costs and cannot be below their minimum. Integrating this pointwise bound gives the following lower bound for $\mathsf G(\lambda,\mathcal S)$:
+\begin{equation}
+    \sum_{p\in\mathcal P}\int_\Omega\min\Bigl\{a_1(\bm x),\min_{i\in\mathcal S}[c(\bm x,y_i)+\lambda_i]\Bigr\}\,d\mu_1^p(\bm x),
+    \label{eq:appendix_exact_weighted_value}
+\end{equation}
+where the inner minimum is $+\infty$ if $\mathcal S$ is empty. This bound charges each demand unit at the least expensive adjusted warehouse cost or external-supply cost.
+
+To attain the bound, use the common costs and fixed tie order in \eqref{eq:design_partition} to form the disjoint measurable regions $R_i(-\lambda;\mathcal S)$. For each part, assign the demand in each warehouse region to that warehouse and the demand in $R_0(-\lambda;\mathcal S)$ to external supply. Set inventory equal to assigned demand at allowed warehouses and to zero elsewhere. This construction satisfies all demand and inventory constraints and selects a minimum-cost option at every point. It therefore attains \eqref{eq:appendix_exact_weighted_value}, proving that the solution in Proposition~\ref{prop:exact_design_update} exists and is globally optimal for the weighted subproblem.
+
+To connect this joint solution to the inventory update, minimize over allocation for prescribed inventories. This recovers the reduced objective $\sum_{p\in\mathcal P}\mathcal V_p(m^p)+\sum_{i\in\mathcal S}\lambda_i s_i(\mathbf m)$, with zero inventories outside $\mathcal S$. The constructed inventory therefore also minimizes this reduced objective. Taking $\lambda=\omega^{(t)}$ and $\mathcal S=\mathcal I$ gives
+\begin{equation}
+    \mathbf m^{(t)}\in\operatorname*{arg\,min}_{\mathbf m\ge0}\left\{\sum_{p\in\mathcal P}\mathcal V_p(m^p)+\sum_{i\in\mathcal I}\omega_i^{(t)}s_i(\mathbf m)\right\}.
+    \label{eq:appendix_weighted_minimizer}
+\end{equation}
+Thus the regional update exactly minimizes the convex weighted subproblem used in reweighted $\ell_1$ minimization. By the tangent bound in \eqref{eq:design_majorization}, it is an MM step for the fixed log-sum objective \eqref{eq:design_logsum}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:design_convergence}}\label{app:design_convergence_proof}
+
+We first bound the inventories and use the curvature of the log-sum penalty to quantify surrogate descent. The resulting control of successive warehouse totals then allows us to pass to the limit in the weighted optimality inequality at any accumulation point. We treat the final reoptimization comparison separately.
+
+\begin{proof}
+For parts (i)--(ii), consider the reweighted iteration continued without the stopping rule. At each update, the warehouse regions are disjoint, so the demand assigned to them cannot exceed the total demand of each part type. Since inventory equals assigned demand, the regional update gives
+\[
+    0\le\sum_{i=1}^M m_i^{p,(t)}\le D_p:=\mu_1^p(\Omega),\qquad p\in\mathcal P,\quad t\ge1.
+\]
+This bounds every updated inventory entry. Including the finite initial matrix, the inventory sequence is bounded and all warehouse totals lie in $[0,B_s]$, where
+\[
+    B_s:=\max\left\{\sum_{p\in\mathcal P}D_p,\max_i s_i\bigl(\mathbf m^{(0)}\bigr)\right\}.
+\]
+
+The bound on warehouse totals provides a uniform curvature bound for the log-sum penalty. To use it, write $s^{(t)}=s(\mathbf m^{(t)})$ and let
+\[
+    r_\epsilon(s):=\sum_{i=1}^M F_i\log(1+s_i/\epsilon).
+\]
+The derivative with respect to $s_i$ at $s^{(t-1)}$ is exactly $\omega_i^{(t)}$. Each summand has second derivative $-F_i/(s_i+\epsilon)^2$, whose magnitude on $[0,B_s]$ is at least $2\alpha_s$, with $\alpha_s:=\min_iF_i/[2(B_s+\epsilon)^2]>0$. Taylor's inequality therefore yields
+\begin{equation}\label{eq:appendix_strict_majorization}
+    r_\epsilon(s^{(t)})\le r_\epsilon(s^{(t-1)})+\sum_{i=1}^M\omega_i^{(t)}(s_i^{(t)}-s_i^{(t-1)})-\alpha_s\|s^{(t)}-s^{(t-1)}\|_2^2.
+\end{equation}
+The quadratic term gives a lower bound on the gap between the tangent approximation and the log-sum penalty in terms of the change in warehouse totals. We next combine this bound with exact minimization of the weighted subproblem to obtain a decrease estimate for the full surrogate objective.
+
+By \eqref{eq:appendix_weighted_minimizer}, the current inventory has no greater weighted objective value than any feasible comparison inventory $\mathbf z\ge0$:
+\begin{equation}\label{eq:appendix_weighted_optimality}
+    \sum_{p\in\mathcal P}\mathcal V_p(m^{p,(t)})+\sum_{i=1}^M\omega_i^{(t)}s_i^{(t)}\le\sum_{p\in\mathcal P}\mathcal V_p(z^p)+\sum_{i=1}^M\omega_i^{(t)}s_i(\mathbf z).
+\end{equation}
+Taking $\mathbf z=\mathbf m^{(t-1)}$ compares the new inventory with the preceding one under the same weights. Combining this inequality with \eqref{eq:appendix_strict_majorization} cancels the linear penalty terms and gives
+\begin{equation}\label{eq:appendix_aggregate_decrease}
+    \Phi_\epsilon\bigl(\mathbf m^{(t-1)}\bigr)-\Phi_\epsilon\bigl(\mathbf m^{(t)}\bigr)\ge\alpha_s\|s^{(t)}-s^{(t-1)}\|_2^2.
+\end{equation}
+Thus the surrogate values are nonincreasing. All operational and penalty terms are nonnegative, so these values are bounded below and converge, proving part (i). Summing the decrease estimate telescopes the objective differences and bounds the sum of squared changes in warehouse totals. Since $\alpha_s>0$, it follows that
+\[
+    \sum_{t=1}^{\infty}\|s^{(t)}-s^{(t-1)}\|_2^2<\infty,\qquad s^{(t)}-s^{(t-1)}\longrightarrow0.
+\]
+The weights depend only on warehouse totals. Consequently, these vanishing differences suffice to identify the limiting weights along a convergent inventory subsequence; no corresponding conclusion about successive full inventory matrices is needed.
+
+To establish stationarity in part (ii), boundedness ensures that accumulation points exist. Take any such point $\bar{\mathbf m}$ and a subsequence $\mathbf m^{(t_k)}\to\bar{\mathbf m}$, with $t_k\to\infty$, and write $\bar s=s(\bar{\mathbf m})$. Continuity of the warehouse-total map gives convergence of $s^{(t_k)}$, and the vanishing difference of successive totals gives the same limit for $s^{(t_k-1)}$. Since $\epsilon>0$ is fixed, the weight formula is continuous even at zero stock. Hence
+\[
+    s^{(t_k)}\longrightarrow\bar s,\qquad s^{(t_k-1)}\longrightarrow\bar s,\qquad\omega_i^{(t_k)}\longrightarrow\frac{F_i}{\bar s_i+\epsilon}.
+\]
+
+To pass to the limit in the operational terms, we use the compact dual representation. By Theorem~\ref{thm:dual_representation} and the compact dual restriction in Appendix~\ref{app:dual_proof}, each $\mathcal V_p$ is the maximum of affine functions of $m^p$ whose slopes lie in the fixed box $\prod_i[-\|a_1\|_\infty,a_{2,i}]$. Thus $\mathcal V_p$ is convex and Lipschitz continuous on the nonnegative orthant. For any fixed $\mathbf z\ge0$, this continuity and the limiting weights allow us to pass to the limit in \eqref{eq:appendix_weighted_optimality}, obtaining
+\begin{equation}\label{eq:design_stationarity}
+    \sum_{p\in\mathcal P}\bigl[\mathcal V_p(z^p)-\mathcal V_p(\bar m^p)\bigr]+\sum_{i=1}^M\frac{F_i}{\bar s_i+\epsilon}\bigl[s_i(\mathbf z)-\bar s_i\bigr]\ge0,\qquad\mathbf z\ge0.
+\end{equation}
+This inequality states that $\bar{\mathbf m}$ minimizes the weighted objective with weights evaluated at its own warehouse totals. These weights are the derivatives of the log-sum penalty at $\bar s$. Because the operational values are convex and the penalty is differentiable on a neighborhood of the nonnegative domain, \eqref{eq:design_stationarity} is the constrained first-order stationarity condition for the fixed surrogate problem $\min_{\mathbf m\ge0}\Phi_\epsilon(\mathbf m)$. This interpretation does not require differentiability of the operational values. The accumulation point was arbitrary, which proves part (ii).
+
+For part (iii), we now consider the finite reoptimization step separately. The terminal inventory matrix is supported on $\mathcal S^{(T)}$ and is feasible for the inventory domain of $\mathsf G(0,\mathcal S^{(T)})$. Applying Proposition~\ref{prop:exact_design_update} with zero penalties therefore gives
+\[
+    \sum_{p\in\mathcal P}\mathcal V_p(\hat m^p)\le\sum_{p\in\mathcal P}\mathcal V_p(m^{p,(T)}),\qquad\widehat{\mathcal S}\subseteq\mathcal S^{(T)}.
+\]
+The first relation shows that operational cost does not increase. The set inclusion shows that the returned active set incurs no additional opening costs, since all opening charges are positive. Adding these two cost comparisons gives
+\[
+    \mathcal J(\hat{\mathbf m})=\sum_{p\in\mathcal P}\mathcal V_p(\hat m^p)+\sum_{i\in\widehat{\mathcal S}}F_i\le\sum_{p\in\mathcal P}\mathcal V_p(m^{p,(T)})+\sum_{i\in\mathcal S^{(T)}}F_i=\mathcal J\bigl(\mathbf m^{(T)}\bigr).
+\]
+Thus final reoptimization does not increase the original economic objective at any finite terminal iterate. This comparison is independent of the asymptotic properties of the reweighted iteration. Reoptimization minimizes operational cost over the selected allowed set; it does not optimize warehouse selection over all its subsets under the original economic objective. The stationarity conclusion in part (ii) concerns accumulation points of the continued iteration and need not hold for $\hat{\mathbf m}$.
+\end{proof}
+
+\subsection{Computational Cost of a Reweighted Iteration}\label{app:design_complexity}
+
+We count the arithmetic operations in one reweighted iteration after the common convex polygonal refinement in the computational-cost remark of Section~\ref{subsec:sparse_network_design} has been precomputed. Let $L$ be its number of cells, let $e_\tau$ be the edge count of cell $\tau$, and let $B_0=\sum_\tau e_\tau$. On each cell, all costs are affine and each demand density is polynomial of fixed degree. These properties allow us to construct the regions by half-plane clipping and integrate demand by Green's theorem.
+
+For region construction, comparing two adjusted affine costs gives a linear inequality. Each of the $M+1$ options, including external supply, is compared with at most $M$ other options on a cell. If affine options are identical there, the fixed tie order retains the least index among them. All remaining pairwise tie sets lie on lines and have zero area, so their assignment does not affect demand integrals. Constructing one option's region on cell $\tau$ therefore requires at most $M$ half-plane clips. Each clip scans the current polygon and adds at most one edge, so after $k$ clips there are at most $e_\tau+k$ edges. Summing the scan costs gives $O(Me_\tau+M^2)$ operations per option and cell. Summing over all options and cells then gives $O(M^2(B_0+LM))$ for region construction.
+
+For demand integration, let $E_t$ be the sum of the edge counts of all output polygon pieces, including edges introduced by the common refinement. With fixed polynomial degree, Green's-theorem integration requires a bounded number of operations per edge, hence $O(E_t)$ operations per part. The common partition is constructed once, but each part's demand density must still be integrated over it. Region construction and demand integration therefore cost
+\[
+    O\!\left(M^2(B_0+LM)+|\mathcal P|E_t\right).
+\]
+The first term accounts for the shared geometry, and the second for the separate demand integrals. Forming warehouse totals, recording the inventory matrix, and checking the stopping condition require $O(M|\mathcal P|)$ further operations. Adding this cost gives the full iteration bound in \eqref{eq:design_iteration_complexity}. The count assumes that the common refinement and polynomial coefficients have been precomputed; the representation sizes $L$ and $B_0$ can themselves grow with the cost and demand descriptions.
+
+
+\end{document}
