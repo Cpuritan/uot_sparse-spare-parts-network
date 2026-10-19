@@ -20,7 +20,7 @@ _clip_convex_polygon_to_halfplane, integrate_edge_gaussian, and
 exact_polygon_integral. They are expressed in kernel-local coordinates and
 compiled with Numba here; the separable primitive avoids expanding the same
 polynomial in global coordinates. The common-refinement and subset reuse
-implementation is adapted from 论文数值实验/geometry.py. No fixed-inventory
+implementation is adapted from the validated numerical-experiment geometry module. No fixed-inventory
 dual iterations from the old experiments are used.
 """
 
