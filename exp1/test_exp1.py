@@ -9,7 +9,7 @@ from scipy.integrate import dblquad
 from algorithm import MonteCarloEvaluator, run_design
 from benchmark import solve_continuous_milp
 from diagnostics import align, path_metrics, trajectory_records
-from environment import DATA, OUT, SETTINGS, Instance, initial_inventory, instance, master, cost_values, continuous_samples
+from environment import OUT, SETTINGS, Instance, initial_inventory, instance, master, cost_values, continuous_samples
 from evaluation import continuous_cost
 from geometry import ExactEvaluator, polygon_moments, _cell_evaluate
 
@@ -26,11 +26,6 @@ class MethodTests(unittest.TestCase):
     def setUpClass(cls):
         cls.inst = toy()
         cls.record, cls.evaluator = run_design(cls.inst)
-
-    def test_manuscript_snapshot(self):
-        source = (DATA / "manuscript.tex").read_text(encoding="utf-8")
-        for label in ["eq:design_weights", "eq:design_partition", "eq:design_update"]:
-            self.assertIn(label, source)
 
     def test_frozen_twenty_inputs(self):
         for seed in SETTINGS["seeds"]:

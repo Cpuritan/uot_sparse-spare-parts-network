@@ -12,3 +12,9 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 .DS_Store
+
+# Keep manuscript sources out of this code repository
+*.tex
+*.bib
+*.cls
+*.sty

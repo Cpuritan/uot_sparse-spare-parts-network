@@ -7,7 +7,7 @@ from scipy.integrate import quad
 from scipy.optimize import linprog
 from algorithm import run_design
 from benchmark import initialize_solver, solve_discrete
-from environment import DATA, OUT, SETTINGS, Instance, instance, scenarios, cost_values
+from environment import OUT, SETTINGS, Instance, instance, scenarios, cost_values
 from evaluation import execution_inventory, evaluate_scenarios, summarize_samples
 from geometry import ExactEvaluator, polygon_moments, clipped_kernel_support, _cell_evaluate
 
@@ -72,12 +72,6 @@ class ExperimentTests(unittest.TestCase):
     def setUpClass(cls):
         cls.inst = toy()
         cls.record, cls.evaluator = run_design(cls.inst)
-
-    def test_manuscript_equations(self):
-        text = (DATA / "manuscript.tex").read_text(encoding="utf-8")
-        for label in ["eq:design_weights", "eq:design_partition", "eq:design_update",
-                      "eq:design_stopping", "eq:design_recovery", "eq:demand-kernel"]:
-            self.assertIn(label, text)
 
     def test_boundary_mass_against_independent_quadrature(self):
         for center in [[0., 0.], [0., 5.], [1., 2.], [5., 5.], [9., 8.]]:

@@ -188,7 +188,6 @@ def main():
         metadata = {"settings": SETTINGS, "platform": platform.platform(), "python": platform.python_version(),
             "versions": {name: version(name) for name in ["numpy", "scipy", "pandas", "matplotlib", "numba", "gurobipy"]},
             "warmup_and_license_seconds": perf_counter() - started, "core_signature": source_signature(),
-            "manuscript_sha256": hashlib.sha256((DATA / "manuscript.tex").read_bytes()).hexdigest(),
             "timing_policy": "Serial complete planning including preprocessing/model building/recovery; exclude input I/O, JIT/license setup, OOS and plotting"}
         write_json(OUT / "environment.json", metadata)
         for scale in SETTINGS["scales"]:
