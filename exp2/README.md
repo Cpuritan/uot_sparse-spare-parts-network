@@ -2,11 +2,11 @@
 
 ## Current paper presentation: unified SAA
 
-In the paper, SAA refers to SAA-C in the raw records: binary warehouse opening with continuous planning inventory. The two main figures currently show SD-TV-UOT, MVP-C, MVP-I, and SAA; the cost, time, and gap for SAA are read only from the original SAA-C record. The reported paper speedup is 11.5–50.7×. The original five-method records, complete statistics, and scenario files remain available for verification; the five-method execution description below documents the raw experiment.
+In the paper, SAA refers to SAA-C in the raw records: binary warehouse opening with continuous planning inventory. The two main figures currently show SD-TV-UOT, MVP-C, MVP-I, and SAA; the cost, time, and gap for SAA are read only from the original SAA-C record. The reported paper speedup is 11.5–50.7×. The experiment generates records, complete statistics, and scenario files for all five methods; the execution description below documents the raw experiment.
 
-To regenerate figures only, run `python plot_exp2.py`; this does not call planning or out-of-sample optimization. `figure-exp2-1-paper-data.csv` contains the 12,000 observations used by the main cost figure, and `figure-exp2-2-paper-data.csv` contains the 12-row complete statistics table; both use the paper label SAA. The original `table-exp2-summary.csv` and the two `figure-exp2-*-data.csv` files remain the complete raw sources. PNG, PDF, and SVG files are overwritten using the original figure names; the manuscript cites the corresponding files in its `Figures/` directory as Figures 6 and 7, respectively.
+After completing the experiment, regenerate figures with `python plot_exp2.py`; this does not call planning or out-of-sample optimization. `figure-exp2-1-paper-data.csv` contains the 12,000 observations used by the main cost figure, and `figure-exp2-2-paper-data.csv` contains the 12-row complete statistics table; both use the paper label SAA. The original `table-exp2-summary.csv` and the two `figure-exp2-*-data.csv` files remain the complete raw sources. PNG, PDF, and SVG files are overwritten using the original figure names; the manuscript cites the corresponding files in its `Figures/` directory as Figures 6 and 7, respectively.
 
-This directory is a self-contained, lightweight paper experiment. It does not import `exp1` or legacy-project modules, and it does not read old policies, solver times, or scenario costs. The settings from the 2026-10-18 revision take precedence over the older Experiment 2: each SAA method is trained once on 200 joint scenarios; the continuous-kernel bandwidth is 5 km; MVP/SAA use Gurobi; and costs are reported in euros. The implementation follows the method and Algorithm 1 in `input/manuscript.tex`; older experiment paragraphs in the manuscript are not used as the design specification for this run.
+This directory is a self-contained numerical experiment implementing the method and Algorithm 1 in the paper. Each SAA method is trained once on 200 joint scenarios; the continuous-kernel bandwidth is 5 km; MVP/SAA use Gurobi; and costs are reported in euros.
 
 ## 1. Flat layout and execution
 
@@ -19,10 +19,10 @@ exp2/
   evaluation.py    Unified integer execution and scenario-level cost/risk metrics
   experiment2.py   Single entry point, per-policy checkpoints, and summary statistics
   plot_exp2.py     Two paper figures that read only saved results
-  test_exp2.py     Independent integration, manuscript, Gurobi, and transport-LP checks
+  test_exp2.py     Independent integration, algorithm, Gurobi, and transport-LP checks
   validate_exp2.py Independent post-run audit of complete results
   requirements.txt Exact dependency versions
-  input/           Frozen seed-42 inputs, train/test scenarios, and manuscript snapshot
+  input/           Frozen seed-42 inputs and train/test scenarios
   output/          Generated solutions, scenario costs, tables, figures, logs, and audits
 ```
 
@@ -35,7 +35,7 @@ python validate_exp2.py
 python experiment2.py --report-only
 ```
 
-The reference environment uses `D:/Anaconda3/python.exe`. Gurobi requires a valid license. The normal entry point runs serially; after interruption it reuses completed policies whose source and input signatures match, without resolving them. Each planning call immediately saves its incumbent, bound, actual gap, and timing before out-of-sample evaluation. If an unfinished solve cannot export an incumbent, no result is fabricated. If scientific settings or core source code change, preserve the current output and start a separate batch; the program rejects mixed signatures. `--report-only` does not solve or reevaluate scenarios.
+Python 3.11 is recommended; exact dependency versions are listed in `requirements.txt`. Gurobi requires a valid license. The normal entry point runs serially; after interruption it reuses completed policies whose source and input signatures match, without resolving them. Each planning call immediately saves its incumbent, bound, actual gap, and timing before out-of-sample evaluation. If an unfinished solve cannot export an incumbent, no result is fabricated. If scientific settings or core source code change, preserve the current output and start a separate batch; the program rejects mixed signatures. The `output/` directory is generated by the experiment. `--report-only` requires completed local results and does not solve or reevaluate scenarios. The test suite contains 14 tests; the completed-artifact check is skipped until full results exist.
 
 ## 2. Experimental settings
 
@@ -83,7 +83,7 @@ Thus, changing the bandwidth can change both the smoothing range and the continu
 | `eq:design_recovery` | Recovery is performed only over the terminal positive-inventory set, with the penalty removed; no second warehouse-subset search is performed. |
 | `eq:design_objective` | The final original economic cost counts shared opening cost once; the log-sum surrogate is not used as the economic objective. |
 
-`geometry.py` was migrated from the verified Experiment 1 mathematical kernel, retaining affine subdivision and Green integration while adding the manuscript-permitted region clipping and removing unused complete-ordering MILP/subset-enumeration helpers. The eight-point boundary Gauss rule is exact for the relevant edge polynomials, not two-dimensional area sampling, subject to floating-point error. `algorithm.py` retains the update formula, tie rules, and recovery logic without methodological changes. Tests independently check clipping mass, synchronous updates, MM non-increase, zero-inventory candidates, stopping, and recovery.
+`geometry.py` implements affine subdivision, Green integration, and the region clipping specified in the paper. The eight-point boundary Gauss rule is exact for the relevant edge polynomials, not two-dimensional area sampling, subject to floating-point error. `algorithm.py` retains the update formula, tie rules, and recovery logic without methodological changes. Tests independently check clipping mass, synchronous updates, MM non-increase, zero-inventory candidates, stopping, and recovery.
 
 MVP-C/I and SAA-C/I share opening decisions and hold inventory by part; SAA uses shared inventory across training scenarios, with scenario-dependent allocation. MVP-I keeps continuous expected-demand allocation while inventory is integer. The matrix retains the external-cost constant, so the solver gap refers to full cost rather than an arbitrary savings shift. Only strictly economically dominated allocation arcs are removed.
 
@@ -93,7 +93,7 @@ If a solve times out with an incumbent, the code saves and evaluates it while re
 
 ## 5. Statistics and figures
 
-- `figure-exp2-1.{png,pdf,svg}`: three S/M/L panels with boxplots of 1,000 OOS total-cost observations for five policies. Diamonds are means, black lines are medians, and whiskers/outliers remain part of the data and statistics.
+- `figure-exp2-1.{png,pdf,svg}`: three S/M/L panels with boxplots of 1,000 OOS total-cost observations for each of the four displayed policies (SD-TV-UOT, MVP-C, MVP-I, and SAA). Diamonds are means, black lines are medians, and whiskers/outliers remain part of the data and statistics.
 - `figure-exp2-2.{png,pdf,svg}`: complete planning time by scale, with y-axis `Solving time (s)` on a log scale, x-axis labels S/M/L, and a single-row legend. Each point is one measured run; no artificial repeat error bars are shown.
 - Neither figure displays seed, training size, bandwidth, solver, time limit, or gap target; these details and actual statuses remain in the tables, raw records, and this README.
 - Planning time includes SD preprocessing, iterations, recovery, and final region construction, or benchmark scenario generation, matrix construction, Gurobi model building, solving, and result assembly. It excludes shared input I/O, license initialization, Numba JIT, OOS evaluation, validation, and plotting. Policies run serially. Figure 2 therefore compares complete planning time, not Gurobi-only solver time against SD time.
@@ -101,30 +101,18 @@ If a solve times out with an incumbent, the code saves and evaluates it while re
 - CVaR95 is the mean of the policy's 50 highest-cost scenarios; external share is total external units divided by total demand. Policy tails are not pooled and cross-network confidence intervals are not estimated.
 - `figure-exp2-1-data.csv` contains complete per-scenario cost components; `figure-exp2-2-data.csv` contains one timing/status row per policy; `table-exp2-inventory.csv` contains raw and executed inventory by warehouse.
 
-Figures use editable SVG, embedded-font PDF, and 300 dpi PNG output. Legacy-project results, Experiment 1, and the manuscript are not overwritten; the local manuscript snapshot is used only for method checks.
+Figures use editable SVG, embedded-font PDF, and 300 dpi PNG output.
 
-## 6. Gurobi migration and result preservation
+## 6. Reference results (2026-10-18)
 
-This run re-solved the 12 MVP/SAA policies that previously used COPT and recomputed their 12,000 OOS scenario costs. The three solver-free SD-TV-UOT policies reused their original inventory, trajectories, measured times, and 3,000 scenario costs. The 200 training scenarios, 1,000 common test scenarios, 5 km bandwidth, costs, and random streams were unchanged.
+The following results summarize the reference run; output files are generated locally when reproducing the experiment.
 
-The pre-switch archive containing 72 source, input, raw-result, and figure files is stored at `input/before-gurobi-20261018.zip`. The program does not accept old COPT benchmark records as Gurobi records. The mathematical model construction was verified as textually unchanged apart from solver-interface parameter names. Shared opening, inventory types, valid bounds, external-cost constant, and feasibility checks are unchanged; Gurobi uses its default feasibility/integrality tolerances, solver seed=0, one thread, 1,800 seconds, and target gap 0.001.
+All 12 benchmark policies were solved by Gurobi within 1,800 seconds and reached the 0.1% relative-gap target; there were no timeouts or missing incumbents. The maximum actual gap was 0.0009877656826097255 (approximately 0.098777%, S/MVP-I). Incumbent, objective, bound, and actual gap were retained without rewriting a nonzero gap as zero. The 12 benchmark complete-planning times totaled 528.808 seconds. Figure 2 uses these complete planning times (seconds):
 
-`input/source-compatibility.json` permits exact source/record-hash reuse only for the three solver-free SD-TV-UOT records. It ignores only historical version and newly added solver fields, not scientific parameters. The old complete COPT results and interface proof remain archived and are not mixed into the current tables. Current tables include `solver` and `solver_version` fields.
-
-Figure 2's `Solving time` is the end-to-end planning time read from `planning_seconds`, not only the optimizer call in `solver_seconds`. The latter remains a separate table field; SD-TV-UOT has no MIP optimizer call, so its complete planning time cannot be compared to benchmark-only optimizer time. This section changes only the axis label, legend layout, and scale labels, not the timing definition.
-
-The current state and actual gaps are defined by `output/completion.json`, `output/table-exp2-summary.csv`, and `output/validation.json`. Historical COPT gaps, timings, and tests are available only as archived comparisons.
-
-### Completed results for this run
-
-All 12 benchmark policies were re-solved by Gurobi within 1,800 seconds and reached the 0.1% relative-gap target; there were no timeouts or missing incumbents. The maximum actual gap was 0.0009877656826097255 (approximately 0.098777%, S/MVP-I). Incumbent, objective, bound, and actual gap were retained without rewriting a nonzero gap as zero. The 12 benchmark complete-planning times totaled 528.808 seconds. Figure 2 uses these complete planning times (seconds):
-
-| Scale | SD-TV-UOT (reused) | MVP-C | MVP-I | SAA-C | SAA-I |
+| Scale | SD-TV-UOT | MVP-C | MVP-I | SAA-C | SAA-I |
 |---|---:|---:|---:|---:|---:|
 | S | 0.572 | 0.095 | 0.918 | 6.584 | 6.623 |
 | M | 1.723 | 0.285 | 1.160 | 72.189 | 125.052 |
 | L | 3.076 | 0.847 | 1.959 | 156.042 | 157.054 |
 
-All 15 tests passed. The complete audit covered 15 policies, 15,000 scenario costs, 850 independent kernel-boundary integrals, and 105 independent transport LPs; the maximum absolute transport-cost error was 1.82e-12 euros. After running report-only mode, hashes of 38 policy, scenario, CSV, and PNG files remained unchanged.
-
-`output/gurobi-switch-audit.json` records the migration audit: the three SD policies and their scenario files are byte-for-byte unchanged; frozen inputs and train/test hashes are unchanged; and all 12 benchmark policies have new Gurobi records. `output/preservation-audit.json` is the earlier preservation audit for the legacy project and Experiment 1 and is not modified by this repository. Under the fixed inputs, many policies have the same executed inventory and OOS costs after the new solve; those values are the new solve's results, not borrowed COPT records.
+Reference-run validation covered 15 policies, 15,000 scenario costs, 850 independent kernel-boundary integrals, and 105 independent transport LPs; the maximum absolute transport-cost error was 1.82e-12 euros. After running report-only mode, hashes of 38 policy, scenario, CSV, and PNG files remained unchanged.

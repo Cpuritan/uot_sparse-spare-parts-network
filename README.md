@@ -2,7 +2,7 @@
 
 Reproducible numerical experiments for the paper on spatially distributed spare-parts inventory design with unbalanced optimal transport.
 
-The repository intentionally contains source code, frozen input data, tests, and method snapshots only. Generated policies, solver logs, diagnostics, figures, tables, caches, and other run-time files are excluded from version control.
+The repository intentionally contains source code, frozen input data, tests, and documentation only. Generated policies, solver logs, diagnostics, figures, tables, caches, and other run-time files are excluded from version control.
 
 ## Contents
 
@@ -47,7 +47,7 @@ python experiment2.py
 
 Both experiments checkpoint completed policies under a generated `output/` directory and can be resumed after interruption. Use `--report-only` after a completed run to regenerate reports and figures without solving again. The generated `output/` directories are deliberately ignored by Git.
 
-The committed `.npz` files are frozen inputs used to make the published numerical results byte-reproducible. The `environment.py` modules also document and validate how these inputs, demand probabilities, costs, and random streams are constructed.
+The committed `.npz` files preserve the exact numerical inputs used by the experiments. The `environment.py` modules also document and validate how these inputs, demand probabilities, costs, and random streams are constructed.
 
 ## Solver and numerical scope
 
